@@ -1,17 +1,28 @@
-# Portfolio - Axel Kifani 🛡️
+# Portfolio - Axel Kifani
 
-Bienvenue sur le code source de mon portfolio personnel. Étudiant en Bachelor Cybersécurité (EPITA × École Polytechnique), j'ai conçu ce site pour présenter mes compétences, mes projets (Pentest, Architecture Réseau, Cryptographie) et ma recherche d'alternance pour 2027.
+Code source de mon site personnel, développé pour regrouper mon écosystème technique et mes différents projets en cybersécurité.
 
-## 🛠️ Stack Technique
-* **Frontend :** HTML5, CSS3 (CSS natif avec variables et animations CSS)
-* **Interactivité :** Vanilla JavaScript (ES6+)
-* **Effets visuels :** API Canvas (`particles.js` custom) et effet "Typewriter"
+> **Aperçu en direct :** [axlk78.github.io](https://axlk78.github.io)
 
-## 🚀 Fonctionnalités
-* Design moderne et responsive (Bento Grid)
-* Mode sombre optimisé avec effets de lueur (Glow)
-* Carrousel de projets interactif
-* Animations d'entrée et de défilement fluides
+## Architecture technique
 
-## 🌐 En ligne
-Découvrez le résultat final ici : [https://AxlK78.github.io](https://AxlK78.github.io)
+Le développement a été réalisé entièrement de zéro, sans framework externe, afin de garantir un contrôle total sur les performances et le code source.
+
+* **Frontend :** HTML5, CSS3 natif
+* **Design System :** Architecture en Bento Grid, gestion du thème via variables CSS (effets de halo, typographies).
+* **Interactivité :** JavaScript (Vanilla). Développement de scripts sur-mesure pour la gestion du carrousel de projets et l'animation d'écriture (Typewriter).
+* **Rendu graphique :** Utilisation de l'API Canvas HTML5 pour le moteur de particules en arrière-plan.
+
+## Contenu
+
+Ce portfolio sert de support pour illustrer mes compétences acquises en Bachelor Cybersécurité (EPITA x École Polytechnique) :
+- Audit et Pentest Web
+- Déploiement et sécurisation d'infrastructures (Active Directory, réseaux)
+- Développement d'outils et cryptographie (Python, C, Bash)
+
+## Déploiement
+
+Le site est statique et hébergé gratuitement via GitHub Pages. La mise en production s'effectue automatiquement à chaque mise à jour de la branche principale.
+
+---
+**Contact :** [Profil LinkedIn](https://www.linkedin.com/in/axel-kifani/) | Actuellement à la recherche d'une alternance pour la rentrée 2027.
