@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Typographies premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <title>Axel Kifani — Cybersécurité</title>
+</head>
+<body>
+    <!-- Fond étoilé -->
+    <canvas id="particles-canvas"></canvas>
+    
+    <!-- Halos asymétriques (Le grand violet à gauche) -->
+    <div class="glow glow-top-left"></div>
+    <div class="glow glow-bottom-right"></div>
+
+    <nav class="navbar reveal-nav">
+        <div class="nav-brand">AK.</div>
+        <div class="nav-links">
+            <a href="#projets">Projets</a>
+            <a href="#competences">Expertise</a>
+            <a href="#contact" class="nav-btn">Contact</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- SECTION HERO -->
+        <section class="hero">
+            <div class="hero-content">
+                <!-- Wrapper pour l'animation d'écriture -->
+                <div class="typewriter-wrapper">
+                    <h1 class="hero-title gradient-text" id="typed-name"></h1><span class="caret"></span>
+                </div>
+                
+                <div class="overflow-hidden">
+                    <h2 class="hero-subtitle reveal-text-2">Sécuriser · Architecturer · Automatiser</h2>
+                </div>
+                
+                <p class="hero-description reveal-fade-3">
+                    Étudiant en Bachelor Cybersécurité (EPITA × École Polytechnique). 
+                    Je conçois des infrastructures robustes et traque les vulnérabilités. <br>
+                    <span class="highlight">À la recherche d'une alternance pour la rentrée 2027.</span>
+                </p>
+
+                <div class="hero-actions reveal-fade-4">
+                    <a href="#projets" class="btn btn-primary">Explorer mes travaux</a>
+                    <div class="social-group">
+                        <a href="https://github.com/AxlK78" target="_blank" class="social-icon" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/axel-kifani/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION PROJETS -->
+        <section class="section" id="projets">
+            <div class="section-header">
+                <h2 class="section-title">Sélection de projets</h2>
+                <div class="line-decorator"></div>
+            </div>
+
+            <div class="carousel-container">
+                <button class="carousel-btn prev" id="prevProjet" aria-label="Précédent">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+
+                <div class="carousel-track-wrapper">
+                    <div class="carousel-track" id="trackProjet">
+                        <!-- Projet 1 -->
+                        <div class="card carousel-item projet-card">
+                            <div class="card-image-wrapper">
+                                <img src="images/crypto.jpg" alt="Cryptographie" />
+                            </div>
+                            <div class="card-content">
+                                <h3>Outil de chiffrement</h3>
+                                <p>Implémentation sécurisée de l'algorithme de Vigenère pour le chiffrement de fichiers et arborescences.</p>
+                            </div>
+                        </div>
+
+                        <!-- Projet 2 -->
+                        <div class="card carousel-item projet-card">
+                            <div class="card-image-wrapper">
+                                <img src="images/gns3.png" alt="Réseau GNS3" />
+                            </div>
+                            <div class="card-content">
+                                <h3>Architecture Réseau</h3>
+                                <p>Déploiement d'une infrastructure inter-entreprises (routage avancé, NAT, pare-feu).</p>
+                            </div>
+                        </div>
+
+                        <!-- Projet 3 -->
+                        <div class="card carousel-item projet-card">
+                            <div class="card-image-wrapper">
+                                <img src="images/burp.png" alt="Burp Suite" />
+                            </div>
+                            <div class="card-content">
+                                <h3>Audit & Pentest Web</h3>
+                                <p>Identification de failles (SQLi, XSS) et propositions de remédiations techniques.</p>
+                            </div>
+                        </div>
+
+                        <!-- Projet 4 -->
+                        <div class="card carousel-item projet-card">
+                            <div class="card-image-wrapper">
+                                <img src="images/windows.png" alt="Active Directory" />
+                            </div>
+                            <div class="card-content">
+                                <h3>Lab Active Directory</h3>
+                                <p>Mise en place d'un domaine Windows Server, gestion GPO et monitoring d'attaques.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-btn next" id="nextProjet" aria-label="Suivant">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION COMPÉTENCES / SKILLS -->
+        <section class="section" id="competences">
+            <div class="section-header">
+                <h2 class="section-title">Écosystème technique</h2>
+                <div class="line-decorator"></div>
+            </div>
+
+            <!-- SOUS-SECTION 1 : LANGAGES -->
+            <h3 class="subsection-title">Langages & Scripting</h3>
+            <div class="bento-grid">
+                
+                <!-- HTML CSS JS -->
+                <div class="card bento-item span-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline><line x1="14" y1="4" x2="10" y2="20"></line>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>Développement Web : HTML, CSS & JS</h3>
+                        <p>Conception d'interfaces fluides et compréhension approfondie du DOM pour l'audit applicatif (XSS, CSRF).</p>
+                    </div>
+                </div>
+
+                <!-- Python -->
+                <div class="card bento-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <text x="12" y="16" font-size="10" text-anchor="middle" font-weight="700" font-family="Outfit" fill="currentColor" stroke="none">Py</text>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>Python</h3>
+                        <p>Automatisation et conception d'outils cyber.</p>
+                    </div>
+                </div>
+
+                <!-- C -->
+                <div class="card bento-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <text x="12" y="16" font-size="10" text-anchor="middle" font-weight="700" font-family="Outfit" fill="currentColor" stroke="none">C</text>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>Langage C</h3>
+                        <p>Mémoire, pointeurs et développement bas niveau.</p>
+                    </div>
+                </div>
+
+                <!-- Assembleur -->
+                <div class="card bento-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>Assembleur</h3>
+                        <p>Rétro-ingénierie et architecture processeur.</p>
+                    </div>
+                </div>
+
+                <!-- Bash -->
+                <div class="card bento-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>Bash / Shell</h3>
+                        <p>Scripting et administration système en CLI.</p>
+                    </div>
+                </div>
+
+                <!-- Java -->
+                <div class="card bento-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>Java</h3>
+                        <p>Programmation orientée objet et analyse.</p>
+                    </div>
+                </div>
+
+                <!-- SQL -->
+                <div class="card bento-item span-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>SQL</h3>
+                        <p>Requêtage, gestion des données relationnelles et exploitation sécuritaire (SQLi).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOUS-SECTION 2 : OUTILS (Logos PNG originaux) -->
+            <h3 class="subsection-title">Outils & Infrastructure</h3>
+            <div class="bento-grid">
+                
+                <div class="card bento-item span-2">
+                    <img src="images/kali.png" alt="Kali Linux" class="tech-icon">
+                    <div class="bento-text">
+                        <h3>Linux & Environnements Offensifs</h3>
+                        <p>Maîtrise de l'administration système sous Linux et utilisation de Kali pour l'audit et l'analyse de vulnérabilités.</p>
+                    </div>
+                </div>
+                
+                <div class="card bento-item">
+                    <img src="images/docker.png" alt="Docker" class="tech-icon">
+                    <div class="bento-text">
+                        <h3>Docker</h3>
+                        <p>Déploiement de labs et conteneurs.</p>
+                    </div>
+                </div>
+
+                <div class="card bento-item span-2">
+                    <img src="images/windows.png" alt="Windows" class="tech-icon">
+                    <div class="bento-text">
+                        <h3>Windows Server & AD</h3>
+                        <p>Déploiement, hardening de l'Active Directory, gestion des politiques de groupe (GPO) et sécurité des accès.</p>
+                    </div>
+                </div>
+
+                <div class="card bento-item">
+                    <img src="images/burp.png" alt="Burp Suite" class="tech-icon">
+                    <div class="bento-text">
+                        <h3>Burp Suite</h3>
+                        <p>Pentesting et interception Web.</p>
+                    </div>
+                </div>
+
+                <div class="card bento-item span-3">
+                    <img src="images/nmap.png" alt="Nmap" class="tech-icon">
+                    <div class="bento-text">
+                        <h3>Nmap & Réseaux</h3>
+                        <p>Cartographie réseau avancée, découverte d'hôtes et scan de ports avec intégration de scripts NSE.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOUS-SECTION 3 : CERTIFICATIONS -->
+            <h3 class="subsection-title">Certifications</h3>
+            <div class="bento-grid">
+                <div class="card bento-item span-3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                    </svg>
+                    <div class="bento-text">
+                        <h3>TOEIC : Score 880</h3>
+                        <p>Certification d'anglais professionnel — Niveau opérationnel supérieur (B2+/C1).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SECTION CONTACT -->
+        <section class="section" id="contact">
+            <div class="contact-wrapper">
+                <div class="contact-text">
+                    <h2 class="section-title">Prenons contact</h2>
+                    <p>Une question, un projet ou une opportunité d'alternance ? Mon profil vous intéresse ? Je suis disponible pour échanger.</p>
+                    <a href="mailto:axelkifani2@gmail.com" class="direct-mail">axelkifani2@gmail.com</a>
+                </div>
+                
+                <div class="contact-form-container">
+                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Message envoyé !');">
+                        <div class="form-row">
+                            <input type="text" placeholder="Nom" required>
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <textarea rows="4" placeholder="Votre message" required></textarea>
+                        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2026 Axel Kifani.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="particles.js"></script>
+    <script src="carousel.js"></script>
+    
+    <!-- Script de l'animation d'écriture (Typewriter) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textToType = "Axel Kifani";
+            const targetElement = document.getElementById("typed-name");
+            let currentIndex = 0;
+
+            function typeWriter() {
+                if (currentIndex < textToType.length) {
+                    targetElement.textContent += textToType.charAt(currentIndex);
+                    currentIndex++;
+                    // Vitesse de frappe aléatoire pour un effet naturel (entre 80ms et 150ms)
+                    let speed = Math.random() * (150 - 80) + 80;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+
+            // Démarrer l'animation après un petit délai
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>
