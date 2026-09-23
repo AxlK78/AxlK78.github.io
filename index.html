@@ -43,8 +43,8 @@
                 </div>
                 
                 <p class="hero-description reveal-fade-3">
-                    Étudiant en Bachelor Cybersécurité (EPITA × École Polytechnique). 
-                    Je conçois des infrastructures robustes et traque les vulnérabilités. <br>
+                    Bachelor Cybersécurité (EPITA × École Polytechnique). 
+                    Spécialisé en architecture réseau, reverse engineering et sécurité offensive. Je déploie des honeypots, conçois des labs réseau et développe des outils de sécurité. <br>
                     <span class="highlight">À la recherche d'une alternance pour la rentrée 2027.</span>
                 </p>
 
@@ -65,7 +65,7 @@
         <!-- SECTION PROJETS -->
         <section class="section" id="projets">
             <div class="section-header">
-                <h2 class="section-title">Sélection de projets</h2>
+                <h2 class="section-title">Projets & Réalisations</h2>
                 <div class="line-decorator"></div>
             </div>
 
@@ -76,49 +76,66 @@
 
                 <div class="carousel-track-wrapper">
                     <div class="carousel-track" id="trackProjet">
-                        <!-- Projet 1 -->
-                        <div class="card carousel-item projet-card">
+                        
+                        <!-- Projet 1: T-Pot Honeypot -->
+                        <a href="https://github.com/AxlK78/tpot-honeypot-analysis" target="_blank" class="card carousel-item projet-card project-link">
                             <div class="card-image-wrapper">
-                                <img src="images/crypto.jpg" alt="Cryptographie" />
+                                <img src="images/t-pot.png" alt="T-Pot Honeypot" />
                             </div>
                             <div class="card-content">
-                                <h3>Outil de chiffrement</h3>
-                                <p>Implémentation sécurisée de l'algorithme de Vigenère pour le chiffrement de fichiers et arborescences.</p>
+                                <h3>T-Pot Honeypot Analysis</h3>
+                                <p>Déploiement de T-Pot 24.04 sur VPS, durcissement réseau UFW et analyse de télémétrie des cyberattaques via Elastic & Cowrie.</p>
+                                <span class="project-badge">📊 Honeypot • ELK • Sécurité réseau</span>
                             </div>
-                        </div>
+                        </a>
 
-                        <!-- Projet 2 -->
-                        <div class="card carousel-item projet-card">
+                        <!-- Projet 2: GNS3 Network -->
+                        <a href="https://github.com/AxlK78/net1-topology-lab" target="_blank" class="card carousel-item projet-card project-link">
                             <div class="card-image-wrapper">
-                                <img src="images/gns3.png" alt="Réseau GNS3" />
+                                <img src="images/gns3.png" alt="GNS3 Network Lab" />
                             </div>
                             <div class="card-content">
-                                <h3>Architecture Réseau</h3>
-                                <p>Déploiement d'une infrastructure inter-entreprises (routage avancé, NAT, pare-feu).</p>
+                                <h3>Network Topology Lab</h3>
+                                <p>Simulation GNS3 d'un réseau multi-entités : deux entreprises, deux FAI et réseau domestique interconnectés, avec adressage réaliste, routage et pare-feu.</p>
+                                <span class="project-badge">🌐 GNS3 • Routage • NAT/Firewall</span>
                             </div>
-                        </div>
+                        </a>
 
-                        <!-- Projet 3 -->
-                        <div class="card carousel-item projet-card">
+                        <!-- Projet 3: MQTT Keylogger PoC -->
+                        <a href="https://github.com/AxlK78/mqtt-keylogger-poc" target="_blank" class="card carousel-item projet-card project-link">
                             <div class="card-image-wrapper">
-                                <img src="images/burp.png" alt="Burp Suite" />
+                                <img src="images/kali.png" alt="MQTT Keylogger" />
                             </div>
                             <div class="card-content">
-                                <h3>Audit & Pentest Web</h3>
-                                <p>Identification de failles (SQLi, XSS) et propositions de remédiations techniques.</p>
+                                <h3>MQTT Keylogger PoC</h3>
+                                <p>Proof of concept de capture et streaming asynchrone de frappes clavier via le protocole MQTT. Démonstration offensive pour audit sécurité.</p>
+                                <span class="project-badge">⌨️ IoT • MQTT • Python</span>
                             </div>
-                        </div>
+                        </a>
 
-                        <!-- Projet 4 -->
-                        <div class="card carousel-item projet-card">
+                        <!-- Projet 4: Chiffrement Vigenère -->
+                        <a href="https://github.com/AxlK78/outil--de-chiffrement" target="_blank" class="card carousel-item projet-card project-link">
                             <div class="card-image-wrapper">
-                                <img src="images/windows.png" alt="Active Directory" />
+                                <img src="images/crypto.jpg" alt="Outil Chiffrement" />
                             </div>
                             <div class="card-content">
-                                <h3>Lab Active Directory</h3>
-                                <p>Mise en place d'un domaine Windows Server, gestion GPO et monitoring d'attaques.</p>
+                                <h3>Outil de Chiffrement Vigenère</h3>
+                                <p>CLI Python implémentant le chiffrement Vigenère avec support texte, fichiers et arborescences. Projet académique EPITA × Polytechnique.</p>
+                                <span class="project-badge">🔐 Cryptographie • Python • CLI</span>
                             </div>
-                        </div>
+                        </a>
+
+                        <!-- Projet 5: Stéganographie LSB -->
+                        <a href="https://github.com/AxlK78/outil-de-st-ganographie" target="_blank" class="card carousel-item projet-card project-link">
+                            <div class="card-image-wrapper">
+                                <img src="images/crypto.jpg" alt="Stéganographie" />
+                            </div>
+                            <div class="card-content">
+                                <h3>Stéganographie LSB</h3>
+                                <p>Implémentation Python de la stéganographie LSB (Least Significant Bit) pour dissimuler et extraire des messages dans des images PNG/JPEG.</p>
+                                <span class="project-badge">🖼️ Stéganographie • Python • Images</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
 
@@ -196,14 +213,14 @@
                     </div>
                 </div>
 
-                <!-- Java -->
+                <!-- MQTT & IoT -->
                 <div class="card bento-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line>
+                        <circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m6-6l-4.24 4.24m6 6l-6-6m-6 6l4.24-4.24m-4.24 4.24H1m6 6l-4.24-4.24"></path>
                     </svg>
                     <div class="bento-text">
-                        <h3>Java</h3>
-                        <p>Programmation orientée objet et analyse.</p>
+                        <h3>MQTT & IoT Security</h3>
+                        <p>Protocoles IoT, sécurité des communications asynchrones, attaques sur les appareils connectés.</p>
                     </div>
                 </div>
 
@@ -239,11 +256,11 @@
                     </div>
                 </div>
 
-                <div class="card bento-item span-2">
-                    <img src="images/windows.png" alt="Windows" class="tech-icon">
+                <div class="card bento-item">
+                    <img src="images/gns3.png" alt="GNS3" class="tech-icon">
                     <div class="bento-text">
-                        <h3>Windows Server & AD</h3>
-                        <p>Déploiement, hardening de l'Active Directory, gestion des politiques de groupe (GPO) et sécurité des accès.</p>
+                        <h3>GNS3 & Simulation Réseau</h3>
+                        <p>Conception et simulation de topologies réseau complexes, routage avancé, NAT, pare-feu et architectures multi-sites.</p>
                     </div>
                 </div>
 
@@ -305,7 +322,7 @@
 
     <footer>
         <div class="footer-content">
-            <p>© 2026 Axel Kifani.</p>
+            <p>© 2026 Axel Kifani. | <a href="https://github.com/AxlK78" target="_blank" style="color: var(--text-accent); text-decoration: none;">GitHub</a> • <a href="https://www.linkedin.com/in/axel-kifani/" target="_blank" style="color: var(--text-accent); text-decoration: none;">LinkedIn</a></p>
         </div>
     </footer>
 

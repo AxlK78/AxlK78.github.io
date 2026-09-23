@@ -1,28 +1,45 @@
 # Portfolio - Axel Kifani
 
-Code source de mon site personnel, développé pour regrouper mon écosystème technique et mes différents projets en cybersécurité.
+Portfolio personnel de showcase de mes projets et compétences en cybersécurité.
 
-> **Aperçu en direct :** [axlk78.github.io](https://axlk78.github.io)
+> **Site en ligne :** [axlk78.github.io](https://axlk78.github.io)  
+> **GitHub :** [github.com/AxlK78](https://github.com/AxlK78)
 
-## Architecture technique
+## À propos
 
-Le développement a été réalisé entièrement de zéro, sans framework externe, afin de garantir un contrôle total sur les performances et le code source.
+Étudiant en Bachelor Cybersécurité (EPITA × École Polytechnique), je me spécialise dans :
+- **Sécurité réseau** : conception d'architectures robustes (GNS3, routage, pare-feu)
+- **Honeypots & Threat Intelligence** : déploiement T-Pot, analyse de télémétrie (ELK, Elastic)
+- **Reverse Engineering** : analyse statique de binaires (Ghidra), rétro-ingénierie
+- **Cryptographie & Stéganographie** : implémentation d'algorithmes sécurisés
+- **Développement d'outils** : CLI de sécurité en Python & Bash
 
-* **Frontend :** HTML5, CSS3 natif
-* **Design System :** Architecture en Bento Grid, gestion du thème via variables CSS (effets de halo, typographies).
-* **Interactivité :** JavaScript (Vanilla). Développement de scripts sur-mesure pour la gestion du carrousel de projets et l'animation d'écriture (Typewriter).
-* **Rendu graphique :** Utilisation de l'API Canvas HTML5 pour le moteur de particules en arrière-plan.
+## Projets Principaux
 
-## Contenu
+| Projet | Description | Stack |
+|--------|-------------|-------|
+| **[tpot-honeypot-analysis](https://github.com/AxlK78/tpot-honeypot-analysis)** | Honeypot T-Pot 24.04, ELK stack, analyse de cyberattaques | Docker, Elastic, Cowrie |
+| **[net1-topology-lab](https://github.com/AxlK78/net1-topology-lab)** | Simulation GNS3 multi-entités avec NAT/Firewall | GNS3, Cisco IOS |
+| **[mqtt-keylogger-poc](https://github.com/AxlK78/mqtt-keylogger-poc)** | PoC de streaming clavier asynchrone via MQTT | Python, MQTT, IoT Security |
+| **[outil-de-chiffrement](https://github.com/AxlK78/outil--de-chiffrement)** | CLI Vigenère pour fichiers & répertoires | Python, Cryptographie |
+| **[outil-de-st-ganographie](https://github.com/AxlK78/outil-de-st-ganographie)** | Stéganographie LSB pour dissimuler des messages | Python, LSB, Image Processing |
 
-Ce portfolio sert de support pour illustrer mes compétences acquises en Bachelor Cybersécurité (EPITA x École Polytechnique) :
-- Audit et Pentest Web
-- Déploiement et sécurisation d'infrastructures (Active Directory, réseaux)
-- Développement d'outils et cryptographie (Python, C, Bash)
+## Architecture Technique du Portfolio
+
+**Frontend vanilla** - Pas de framework pour un contrôle maximal :
+- **HTML5** + **CSS3** avec variables (thème, animations fluides)
+- **JavaScript Vanilla** pour l'interactivité (carrousel, typewriter)
+- **Canvas API** pour les particules en arrière-plan
+- **Design System** : Bento Grid, halo glow, transitions fluides
 
 ## Déploiement
 
-Le site est statique et hébergé gratuitement via GitHub Pages. La mise en production s'effectue automatiquement à chaque mise à jour de la branche principale.
+Site statique hébergé via **GitHub Pages** avec déploiement automatique à chaque push sur `main`.
 
----
-**Contact :** [Profil LinkedIn](https://www.linkedin.com/in/axel-kifani/) | Actuellement à la recherche d'une alternance pour la rentrée 2027.
+## Contact
+
+- **Email :** axelkifani2@gmail.com
+- **LinkedIn :** [axel-kifani](https://www.linkedin.com/in/axel-kifani/)
+- **GitHub :** [AxlK78](https://github.com/AxlK78)
+
+**À la recherche d'une alternance pour 2027 (L3 → Diplôme d'ingénieur).**
