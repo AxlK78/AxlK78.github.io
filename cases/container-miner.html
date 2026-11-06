@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050812">
+  <title>CF-03 · Container audit — Axel Kifani</title>
+  <meta name="description" content="Auditing a supplied Docker stack: a planted cryptominer hidden as a health check, a privileged container that could see the host disks, and why a clean Trivy scan was not enough.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="topbar"><div class="wrap glass"><a class="id" href="../index.html">axel kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
+
+<main class="desk wrap">
+  <a class="back" href="../index.html#cases">← all case files</a>
+  <article class="paper">
+    <header class="case-hero">
+      <div class="reveal">
+        <div class="file-head"><span>Case file CF-03<br>Container security</span><span class="stamp-big closed">Closed</span></div>
+
+        <h1>The health check that was mining</h1>
+        <p class="standfirst">The brief: deploy a supplied three-container web app, then audit it. The app ran fine. It also kept the CPU between 60 and 82% while doing nothing, and that turned out to be the whole story.</p>
+      </div>
+      <canvas class="ascii case-art" data-scene="container" data-size="lg" aria-hidden="true"></canvas>
+    </header>
+    <div class="case-body">
+
+    <dl class="meta">
+      <div><dt>Context</dt><dd>EPITA coursework, final lab</dd></div>
+      <div><dt>When</dt><dd>September 2026</dd></div>
+      <div><dt>Stack</dt><dd>Docker Compose, K3s, Helm, Trivy</dd></div>
+      <div><dt>Target</dt><dd>Nginx → Flask → PostgreSQL</dd></div>
+    </dl>
+
+    <div class="bottom-line">
+      <span class="k">Bottom line</span>
+      <p>Trivy reported the outdated Flask, and missed both the planted miner and the hard-coded secrets. A clean scanner result says nothing about what an image actually runs.</p>
+    </div>
+
+    <h2><span class="no">01</span>Reading the image instead of trusting it</h2>
+    <p><code>docker history</code> shows how an image was built, layer by layer. Three things stood out: a 507 MB <code>postgresql-dev</code> layer with no use at runtime, the database password and Flask <code>SECRET_KEY</code> set with <code>ENV</code>, and a custom <code>/entrypoint.sh</code>.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/docker/t_entrypoint.webp" alt="Terminal: docker exec tp-app-web cat /entrypoint.sh shows a comment 'run the health check in background (stealthy)', then python .config/.health_check.py redirected to /dev/null, then python app.py." loading="lazy">
+      <figcaption><b>Fig. 1</b> The entrypoint starts a hidden script, silenced, before the app. The original comment says “stealthy”.</figcaption>
+    </figure>
+    <p><code>.config/.health_check.py</code> is not a health check. It is an infinite SHA-256 loop that detaches from its parent, with its own log hidden in <code>/tmp/.system_monitor.log</code>. The image was built for the exercise, so the “miner” is a simulation planted by the course: it burns CPU like one but mines nothing. Finding it was the point.</p>
+    <div class="ev-pair">
+      <figure class="ev reveal">
+        <img src="../assets/img/docker/t_miner.webp" alt="Contents of .health_check.py: a simulate_mining function looping over hashlib.sha256 and logging to /tmp/.system_monitor.log." loading="lazy">
+        <figcaption><b>Fig. 2</b> The “health check”: <code>simulate_mining()</code>.</figcaption>
+      </figure>
+      <figure class="ev reveal">
+        <img src="../assets/img/docker/t_top.webp" alt="docker top output listing the hidden python process next to the Flask application." loading="lazy">
+        <figcaption><b>Fig. 3</b> Running right next to the app.</figcaption>
+      </figure>
+    </div>
+
+    <h2><span class="no">02</span>Worse than a miner: a way out of the container</h2>
+    <p>The app container ran with <code>privileged: true</code> and no resource limits. From inside it, the VM's disks were visible. With root in the container, mounting the host disk and taking over the VM is a few commands away.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/docker/t_priv.webp" alt="docker inspect shows Privileged=true, Memory=0, NanoCpus=0; listing /dev inside the container shows sda, sda1, sda2 and sda5." loading="lazy">
+      <figcaption><b>Fig. 4</b> Privileged, unlimited, and the host disks <code>sda*</code> visible from inside.</figcaption>
+    </figure>
+
+    <h2><span class="no">03</span>What the scanner saw, and didn't</h2>
+    <p>Alpine 3.24.2 itself had no CVEs. The findings were in Python packages, the main one Flask 2.3.0 (HIGH): behind a proxy, one user's session cookie can be served to another. That is real and worth fixing. But Trivy flagged neither the miner nor the secrets.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/docker/t_trivy.webp" alt="Trivy scan results listing vulnerable Python packages including Flask." loading="lazy">
+      <figcaption><b>Fig. 5</b> Trivy's view: a vulnerable dependency, nothing about the miner.</figcaption>
+    </figure>
+
+    <h2><span class="no">04</span>Hardening the compose file</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Problem</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td><code>privileged: true</code></td><td>removed; <code>cap_drop: [ALL]</code>, <code>no-new-privileges</code></td></tr>
+        <tr><td>Passwords in clear</td><td><code>.env</code> and Docker secrets, random values</td></tr>
+        <tr><td><code>DEBUG=true</code>, development mode</td><td>production settings</td></tr>
+        <tr><td>Ports 8000 and 5432 published</td><td>only Nginx publishes a port</td></tr>
+        <tr><td>One flat network</td><td>frontend network + internal backend network for the DB</td></tr>
+        <tr><td><code>latest</code> tags</td><td>pinned versions</td></tr>
+        <tr><td>No resource limits</td><td>CPU, memory and PID limits</td></tr>
+        <tr><td>Writable filesystem</td><td><code>read_only: true</code></td></tr>
+        <tr><td>App may start before the DB</td><td>DB healthcheck + <code>condition: service_healthy</code></td></tr>
+        <tr><td>Miner starts with the container</td><td><code>entrypoint: ["python", "app.py"]</code> until the image is rebuilt</td></tr>
+      </tbody>
+    </table></div>
+    <p>Tested on the VM afterwards: the miner no longer runs, the container is unprivileged and blind to the disks, the filesystem is read-only, port 8000 no longer answers, and the app still works.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/docker/t_secure_checks.webp" alt="After hardening: all three containers healthy, docker top shows only python app.py as user 1001, Privileged=false ReadOnly=true CapDrop=[ALL], no sda device, touch fails with read-only file system, port 8000 returns 000 and port 8080 returns 200." loading="lazy">
+      <figcaption><b>Fig. 6</b> Checking each fix instead of assuming it.</figcaption>
+    </figure>
+
+    <section class="incident reveal" aria-label="Incident">
+      <header><span>Incident · installing Trivy</span><span>resolved</span></header>
+      <dl>
+        <dt>Symptom</dt><dd><code>apt update</code> failed; the Trivy keyring file was 0 bytes.</dd>
+        <dt>Cause</dt><dd>The install block, pasted from a PDF, was split across lines and <code>sudo</code> asked for a password halfway through. A leftover <code>docker.list</code> also pointed at the Ubuntu repo on a Debian box (404 on <i>trixie</i>).</dd>
+        <dt>Fix</dt><dd>Downloaded the key separately, installed it with <code>sudo install</code>, removed the wrong <code>docker.list</code>.</dd>
+      </dl>
+    </section>
+
+    <h2><span class="no">05</span>Recommendations</h2>
+    <ul class="next-steps">
+      <li>Rebuild from a clean Dockerfile: no secrets, no build tools, no hidden scripts.</li>
+      <li>Upgrade Flask to 3.1.3 or later.</li>
+      <li>Fail the CI on <code>trivy image --exit-code 1 --severity HIGH,CRITICAL</code>, and still review what the image runs.</li>
+    </ul>
+
+    </div>
+    <div class="file-foot"><a href="honeypot.html">← CF-02</a><span>CF-03</span><a href="reverse-cfg.html">CF-04 →</a></div>
+  </article>
+</main>
+<script src="../assets/js/ascii.js"></script>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050812">
+  <title>CF-02 · Honeypot — Axel Kifani</title>
+  <meta name="description" content="A T-Pot honeypot on a public VPS: 162,823 events in 70 hours, a SIP toll-fraud sweep, Mirai-style recon, and a WannaCry dropper reversed in Ghidra.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="topbar"><div class="wrap glass"><a class="id" href="../index.html">axel kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
+
+<main class="desk wrap">
+  <a class="back" href="../index.html#cases">← all case files</a>
+  <article class="paper">
+    <header class="case-hero">
+      <div class="reveal">
+        <div class="file-head"><span>Case file CF-02<br>Honeypot · threat intel</span><span class="stamp-big closed">Closed</span></div>
+
+        <h1>70 hours on the open internet</h1>
+        <p class="standfirst">I rented a VPS, told nobody its address, and turned it into a honeypot. In under three days it logged 162,823 hostile events, and one of the things that came in was a piece of WannaCry.</p>
+      </div>
+      <canvas class="ascii case-art" data-scene="globe" data-size="lg" aria-hidden="true"></canvas>
+    </header>
+    <div class="case-body">
+
+    <dl class="meta">
+      <div><dt>Context</dt><dd>Personal project</dd></div>
+      <div><dt>When</dt><dd>September 2026</dd></div>
+      <div><dt>Stack</dt><dd>T-Pot 24.04, Elastic, Suricata, Ghidra</dd></div>
+      <div><dt>Write-up</dt><dd><a href="https://github.com/AxlK78/tpot-honeypot-analysis">GitHub repo</a></dd></div>
+    </dl>
+
+    <div class="bottom-line">
+      <span class="k">Bottom line</span>
+      <p>Almost nothing that hits an exposed server is human. It is scanners, botnets and worms from years ago that still work because someone, somewhere, never patched.</p>
+    </div>
+
+    <h2><span class="no">01</span>Setup: expose the bait, hide the controls</h2>
+    <p>T-Pot runs a dozen honeypots in Docker containers, each faking a service (SSH, SMB, SIP, SCADA…), with Elasticsearch and Kibana on top. Exposing it is the easy part. The hard part is making sure the server's real administration is not exposed too.</p>
+    <ul>
+      <li><b>UFW deny-by-default.</b> Ports 1–64000 open on purpose for the honeypots; the real SSH and Kibana moved to high ports and allowed from one IP only.</li>
+      <li><b>Tailscale for admin.</b> My IP changes when I move, and reopening the firewall each time is how holes get left open. Admin ports are allowed only on the <code>tailscale0</code> interface, reachable at <span class="redact" aria-label="redacted">100.xx.xxx.xxx</span> from my own devices and nowhere else.</li>
+      <li><b>Port conflicts.</b> The <code>tpotinit</code> container crash-looped until I freed ports 25, 53 and 5355 from exim4 and systemd-resolved.</li>
+    </ul>
+
+    <h2><span class="no">02</span>What arrived</h2>
+    <figure class="ev reveal">
+      <img src="../assets/img/honeypot/06_kibana_overview_24h.webp" alt="Kibana T-Pot dashboard: 162,823 total attacks, Sentrypeer 135,605, Cowrie 13,155, Dionaea 11,253, with a bar chart, a histogram showing one large spike, and a world attack map." loading="lazy">
+      <figcaption><b>Fig. 1</b> The dashboard after 70 hours: 162,823 events, about 2,300 an hour.</figcaption>
+    </figure>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Honeypot</th><th>Pretends to be</th><th style="text-align:right">Events</th><th style="text-align:right">Share</th></tr></thead>
+      <tbody>
+        <tr><td>Sentrypeer</td><td>SIP / VoIP (5060)</td><td class="num">135,605</td><td class="num">83.3%</td></tr>
+        <tr><td>Cowrie</td><td>SSH / Telnet (22, 23)</td><td class="num">13,155</td><td class="num">8.1%</td></tr>
+        <tr><td>Dionaea</td><td>SMB / RPC / SQL (445, 135, 3306)</td><td class="num">11,253</td><td class="num">6.9%</td></tr>
+        <tr><td>Honeytrap</td><td>generic TCP</td><td class="num">825</td><td class="num">0.5%</td></tr>
+        <tr><td>Ddospot</td><td>NTP / SSDP amplification</td><td class="num">729</td><td class="num">&lt;0.5%</td></tr>
+        <tr><td>Tanner</td><td>web apps (SQLi, RCE)</td><td class="num">392</td><td class="num">&lt;0.3%</td></tr>
+        <tr><td>ConPot</td><td>industrial control (SCADA)</td><td class="num">161</td><td class="num">&lt;0.1%</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>A toll-fraud sweep from 11 machines</h3>
+    <p>At 09:30, 92,861 SIP requests arrived in one burst from just 11 source IPs. That is reconnaissance for toll fraud: find a badly protected phone system, then use it to call premium numbers the attacker owns, billed to the victim.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/honeypot/08_attacks_spike_histogram.webp" alt="Histogram of attacks over time with one tall spike around 09:30 while unique source IPs stay flat." loading="lazy">
+      <figcaption><b>Fig. 2</b> Attacks spike, unique source IPs don't: a handful of machines doing most of the work.</figcaption>
+    </figure>
+
+    <h3>Bots checking the CPU before dropping a payload</h3>
+    <p>When a script “logged in” to Cowrie with default credentials, the first commands were almost always variations of <code>uname -a</code>. No human types that first. It is the Mirai/Gafgyt pattern: check the CPU architecture (x86, ARM, MIPS…) to pick which binary to download.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/honeypot/11_cowrie_commands_top10.webp" alt="Kibana table of the top 10 commands typed in Cowrie sessions, dominated by uname variants." loading="lazy">
+      <figcaption><b>Fig. 3</b> Top commands in Cowrie sessions, the same fingerprinting from thousands of IPs.</figcaption>
+    </figure>
+
+    <h3>EternalBlue is still being tried</h3>
+    <p>Dionaea's traffic was mostly SMB on 445 and RPC on 135, the two services behind EternalBlue (MS17-010). Nine years after WannaCry, scanners still look for it.</p>
+
+    <h2 id="reverse"><span class="no">03</span>Reversing what Dionaea caught</h2>
+    <p>Dionaea stores the binaries attackers push to it. <code>file</code> said <code>PE32 executable (DLL) Intel 80386, for MS Windows</code>. I copied one sample to an isolated REMnux VM and only did static analysis: the sample was never executed.</p>
+    <ol>
+      <li><b>Strings first.</b> Two stood out: <code>mssecsvc.exe</code> and <code>launcher.dll</code>, both documented WannaCry artefacts.</li>
+      <li><b>One export.</b> The DLL exposes a single function, <code>PlayGame</code>, a harmless name for code that DoublePulsar injects into <code>lsass.exe</code>.</li>
+      <li><b>The dropper.</b> <code>FUN_10001016</code> finds resource <code>0x65</code> inside the DLL, locks it in memory, and writes it to disk as <code>mssecsvc.exe</code>: the worm component that scans for other SMB hosts.</li>
+    </ol>
+    <div class="ev-pair">
+      <figure class="ev reveal">
+        <img src="../assets/img/honeypot/14_ghidra_strings_mssecsvc.webp" alt="Ghidra Defined Strings window with the string mssecsvc.exe highlighted." loading="lazy">
+        <figcaption><b>Fig. 4</b> The string that gave it away.</figcaption>
+      </figure>
+      <figure class="ev reveal">
+        <img src="../assets/img/honeypot/16_ghidra_decompiler_dropper.webp" alt="Ghidra decompiler showing FindResourceA, LoadResource, LockResource, SizeofResource, CreateFileA and WriteFile calls." loading="lazy">
+        <figcaption><b>Fig. 5</b> The dropper routine in the decompiler.</figcaption>
+      </figure>
+    </div>
+<pre><code>hResInfo = FindResourceA(DAT_1000313c, (LPCSTR)0x65, &amp;DAT_10003010);
+...
+hFile = CreateFileA(&amp;DAT_10003038 /* "mssecsvc.exe" */, 0x40000000, 2, NULL, 2, 4, NULL);
+WriteFile(hFile, pDVar1 + 1, DVar2, &amp;local_4, NULL);</code></pre>
+
+    <h2><span class="no">04</span>Limits I'd fix next time</h2>
+    <ul class="next-steps">
+      <li>Static analysis only. Detonating <code>mssecsvc.exe</code> in a sandbox would confirm the encryption phase.</li>
+      <li>Geo-IP shows where a packet came from, not who sent it. Most sources were tagged as mass scanners or known attackers, likely compromised hosts.</li>
+      <li>70 hours is a snapshot. A few weeks would separate campaigns from background noise.</li>
+      <li>No alerting. Suricata plus a webhook would make it closer to a SOC workflow.</li>
+    </ul>
+
+    </div>
+    <div class="file-foot"><a href="homelab.html">← CF-01</a><span>CF-02</span><a href="container-miner.html">CF-03 →</a></div>
+  </article>
+</main>
+<script src="../assets/js/ascii.js"></script>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

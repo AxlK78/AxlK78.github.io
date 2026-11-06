@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050812">
+  <title>CF-05 · GNS3 network — Axel Kifani</title>
+  <meta name="description" content="A GNS3 simulation of two companies, two ISPs and a home network: realistic addressing, static routing, NAT and iptables filtering.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="topbar"><div class="wrap glass"><a class="id" href="../index.html">axel kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
+
+<main class="desk wrap">
+  <a class="back" href="../index.html#cases">← all case files</a>
+  <article class="paper">
+    <header class="case-hero">
+      <div class="reveal">
+        <div class="file-head"><span>Case file CF-05<br>Networking</span><span class="stamp-big closed">Closed</span></div>
+
+        <h1>Two companies, two ISPs, one backbone</h1>
+        <p class="standfirst">A small internet in GNS3: two companies on a business ISP, a home on a consumer ISP, and a backbone in between. Every router configured by hand, with addressing that would make sense in the real world.</p>
+      </div>
+      <canvas class="ascii case-art" data-scene="net" data-size="lg" aria-hidden="true"></canvas>
+    </header>
+    <div class="case-body">
+
+    <dl class="meta">
+      <div><dt>Context</dt><dd>EPITA coursework</dd></div>
+      <div><dt>Nodes</dt><dd>6 routers, 6 hosts</dd></div>
+      <div><dt>Stack</dt><dd>GNS3, Linux routing, iptables</dd></div>
+      <div><dt>Repo</dt><dd><a href="https://github.com/AxlK78/net1-topology-lab">net1-topology-lab</a></dd></div>
+    </dl>
+
+    <div class="bottom-line">
+      <span class="k">Bottom line</span>
+      <p>Where I learned that private addresses never cross the internet, why every leaf router only needs a default route, and how DNAT exposes one server without exposing the rest.</p>
+    </div>
+
+    <figure class="ev reveal">
+      <img src="../assets/img/network/topology.webp" alt="GNS3 topology: Clover Corp with a server switch and an office switch, Rhodes Corp with one web server, both behind Daisy Telecom, a backbone router, then Lotus Telecom serving a home network behind a box." loading="lazy">
+      <figcaption><b>Fig. 1</b> The topology in GNS3.</figcaption>
+    </figure>
+
+    <h2><span class="no">01</span>Who is who</h2>
+    <ul>
+      <li><b>Clover Corp.</b> A server network (website, app) and an office network, behind one router doing NAT and filtering.</li>
+      <li><b>Rhodes Corp.</b> Only hosts a website.</li>
+      <li><b>Daisy Telecom</b>, a business ISP for both companies; <b>Lotus Telecom</b>, a consumer ISP for a home behind a box.</li>
+      <li><b>Backbone</b>, linking the two ISPs.</li>
+    </ul>
+
+    <h2><span class="no">02</span>Addressing</h2>
+    <p>Private ranges inside, documentation ranges (<code>198.51.100.0/24</code>, <code>192.0.2.0/24</code>, <code>203.0.113.0/24</code>) standing in for public space, and link sizes chosen to fit: <code>/31</code> for point-to-point router links, <code>/29</code> where only a few hosts sit.</p>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Network</th><th>Range</th></tr></thead>
+      <tbody>
+        <tr><td>Clover servers</td><td><code>10.101.50.0/24</code></td></tr>
+        <tr><td>Clover office (DHCP)</td><td><code>10.102.10.0/24</code></td></tr>
+        <tr><td>Rhodes servers</td><td><code>10.128.100.0/24</code></td></tr>
+        <tr><td>Home (DHCP)</td><td><code>192.168.42.0/24</code></td></tr>
+        <tr><td>Daisy ↔ Clover</td><td><code>198.51.100.120/29</code></td></tr>
+        <tr><td>Daisy ↔ Rhodes</td><td><code>192.0.2.128/25</code></td></tr>
+        <tr><td>Daisy ↔ Backbone</td><td><code>203.0.113.4/31</code></td></tr>
+        <tr><td>Backbone ↔ Lotus</td><td><code>203.0.113.2/31</code></td></tr>
+        <tr><td>Lotus customers (DHCP)</td><td><code>203.0.113.128/29</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h2><span class="no">03</span>Routing</h2>
+    <p>Leaf routers (Clover, Rhodes, Lotus) have one default route towards their upstream. Only aggregators carry explicit routes: Daisy knows its customers' networks and Lotus's public range; the backbone knows which public blocks belong to which ISP.</p>
+
+    <h2><span class="no">04</span>NAT and filtering</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Router</th><th>NAT</th><th>Filtering</th></tr></thead>
+      <tbody>
+        <tr><td>Clover</td><td>DNAT :80 → website · SNAT to a fixed IP</td><td>ICMP only to the router · servers can't reach the office · HTTP allowed to servers</td></tr>
+        <tr><td>Rhodes</td><td>DNAT :80 → website · SNAT</td><td>—</td></tr>
+        <tr><td>Home box</td><td>MASQUERADE (dynamic public IP)</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <p>The end-to-end test: the home PC reaches Clover's website through Clover's public address, crossing two NATs, three ISP routers and the backbone.</p>
+<pre><code>ip route
+iptables -L -n
+iptables -t nat -L -n</code></pre>
+
+    </div>
+    <div class="file-foot"><a href="reverse-cfg.html">← CF-04</a><span>CF-05</span><a href="../index.html#cases">All files →</a></div>
+  </article>
+</main>
+<script src="../assets/js/ascii.js"></script>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

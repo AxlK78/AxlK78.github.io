@@ -1,355 +1,230 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Typographies premium -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
-    <title>Axel Kifani — Cybersécurité</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Axel Kifani — Security labs & case files</title>
+  <meta name="description" content="Cybersecurity student (EPITA × École Polytechnique). Home lab, honeypot telemetry, malware and binary reverse engineering, container forensics. Looking for an apprenticeship from September 2027.">
+  <meta name="theme-color" content="#050812">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-    <!-- Fond étoilé -->
-    <canvas id="particles-canvas"></canvas>
-    
-    <!-- Halos asymétriques (Le grand violet à gauche) -->
-    <div class="glow glow-top-left"></div>
-    <div class="glow glow-bottom-right"></div>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 
-    <nav class="navbar reveal-nav">
-        <div class="nav-brand">AK.</div>
-        <div class="nav-links">
-            <a href="#projets">Projets</a>
-            <a href="#competences">Expertise</a>
-            <a href="#contact" class="nav-btn">Contact</a>
-        </div>
+<header class="topbar">
+  <div class="wrap glass">
+    <a class="id" href="#top">axel kifani</a>
+    <nav aria-label="Main">
+      <a href="#cases">Case files</a>
+      <a href="#lab">Lab</a>
+      <a href="#log" class="hide-sm">Logbook</a>
+      <a href="#contact">Contact</a>
+      <a class="nav-cv" href="assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a>
     </nav>
+  </div>
+</header>
 
-    <main class="container">
-        <!-- SECTION HERO -->
-        <section class="hero">
-            <div class="hero-content">
-                <!-- Wrapper pour l'animation d'écriture -->
-                <div class="typewriter-wrapper">
-                    <h1 class="hero-title gradient-text" id="typed-name"></h1><span class="caret"></span>
-                </div>
-                
-                <div class="overflow-hidden">
-                    <h2 class="hero-subtitle reveal-text-2">Sécuriser · Architecturer · Automatiser</h2>
-                </div>
-                
-                <p class="hero-description reveal-fade-3">
-                    Bachelor Cybersécurité (EPITA × École Polytechnique). 
-                    Spécialisé en architecture réseau, reverse engineering et sécurité offensive. Je déploie des honeypots, conçois des labs réseau et développe des outils de sécurité. <br>
-                    <span class="highlight">À la recherche d'une alternance pour la rentrée 2027.</span>
-                </p>
+<main id="top">
 
-                <div class="hero-actions reveal-fade-4">
-                    <a href="#projets" class="btn btn-primary">Explorer mes travaux</a>
-                    <div class="social-group">
-                        <a href="https://github.com/AxlK78" target="_blank" class="social-icon" aria-label="GitHub">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                        </a>
-                        <a href="https://www.linkedin.com/in/axel-kifani/" target="_blank" class="social-icon" aria-label="LinkedIn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION PROJETS -->
-        <section class="section" id="projets">
-            <div class="section-header">
-                <h2 class="section-title">Projets & Réalisations</h2>
-                <div class="line-decorator"></div>
-            </div>
-
-            <div class="carousel-container">
-                <button class="carousel-btn prev" id="prevProjet" aria-label="Précédent">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-
-                <div class="carousel-track-wrapper">
-                    <div class="carousel-track" id="trackProjet">
-                        
-                        <!-- Projet 1: T-Pot Honeypot -->
-                        <a href="https://github.com/AxlK78/tpot-honeypot-analysis" target="_blank" class="card carousel-item projet-card project-link">
-                            <div class="card-image-wrapper">
-                                <img src="images/t-pot.png" alt="T-Pot Honeypot" />
-                            </div>
-                            <div class="card-content">
-                                <h3>T-Pot Honeypot Analysis</h3>
-                                <p>Déploiement de T-Pot 24.04 sur VPS, durcissement réseau UFW et analyse de télémétrie des cyberattaques via Elastic & Cowrie.</p>
-                                <span class="project-badge">📊 Honeypot • ELK • Sécurité réseau</span>
-                            </div>
-                        </a>
-
-                        <!-- Projet 2: GNS3 Network -->
-                        <a href="https://github.com/AxlK78/net1-topology-lab" target="_blank" class="card carousel-item projet-card project-link">
-                            <div class="card-image-wrapper">
-                                <img src="images/gns3.png" alt="GNS3 Network Lab" />
-                            </div>
-                            <div class="card-content">
-                                <h3>Network Topology Lab</h3>
-                                <p>Simulation GNS3 d'un réseau multi-entités : deux entreprises, deux FAI et réseau domestique interconnectés, avec adressage réaliste, routage et pare-feu.</p>
-                                <span class="project-badge">🌐 GNS3 • Routage • NAT/Firewall</span>
-                            </div>
-                        </a>
-
-                        <!-- Projet 3: MQTT Keylogger PoC -->
-                        <a href="https://github.com/AxlK78/mqtt-keylogger-poc" target="_blank" class="card carousel-item projet-card project-link">
-                            <div class="card-image-wrapper">
-                                <img src="images/kali.png" alt="MQTT Keylogger" />
-                            </div>
-                            <div class="card-content">
-                                <h3>MQTT Keylogger PoC</h3>
-                                <p>Proof of concept de capture et streaming asynchrone de frappes clavier via le protocole MQTT. Démonstration offensive pour audit sécurité.</p>
-                                <span class="project-badge">⌨️ IoT • MQTT • Python</span>
-                            </div>
-                        </a>
-
-                        <!-- Projet 4: Chiffrement Vigenère -->
-                        <a href="https://github.com/AxlK78/outil--de-chiffrement" target="_blank" class="card carousel-item projet-card project-link">
-                            <div class="card-image-wrapper">
-                                <img src="images/crypto.jpg" alt="Outil Chiffrement" />
-                            </div>
-                            <div class="card-content">
-                                <h3>Outil de Chiffrement Vigenère</h3>
-                                <p>CLI Python implémentant le chiffrement Vigenère avec support texte, fichiers et arborescences. Projet académique EPITA × Polytechnique.</p>
-                                <span class="project-badge">🔐 Cryptographie • Python • CLI</span>
-                            </div>
-                        </a>
-
-                        <!-- Projet 5: Stéganographie LSB -->
-                        <a href="https://github.com/AxlK78/outil-de-st-ganographie" target="_blank" class="card carousel-item projet-card project-link">
-                            <div class="card-image-wrapper">
-                                <img src="images/crypto.jpg" alt="Stéganographie" />
-                            </div>
-                            <div class="card-content">
-                                <h3>Stéganographie LSB</h3>
-                                <p>Implémentation Python de la stéganographie LSB (Least Significant Bit) pour dissimuler et extraire des messages dans des images PNG/JPEG.</p>
-                                <span class="project-badge">🖼️ Stéganographie • Python • Images</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <button class="carousel-btn next" id="nextProjet" aria-label="Suivant">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-            </div>
-        </section>
-
-        <!-- SECTION COMPÉTENCES / SKILLS -->
-        <section class="section" id="competences">
-            <div class="section-header">
-                <h2 class="section-title">Écosystème technique</h2>
-                <div class="line-decorator"></div>
-            </div>
-
-            <!-- SOUS-SECTION 1 : LANGAGES -->
-            <h3 class="subsection-title">Langages & Scripting</h3>
-            <div class="bento-grid">
-                
-                <!-- HTML CSS JS -->
-                <div class="card bento-item span-2">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline><line x1="14" y1="4" x2="10" y2="20"></line>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>Développement Web : HTML, CSS & JS</h3>
-                        <p>Conception d'interfaces fluides et compréhension approfondie du DOM pour l'audit applicatif (XSS, CSRF).</p>
-                    </div>
-                </div>
-
-                <!-- Python -->
-                <div class="card bento-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <text x="12" y="16" font-size="10" text-anchor="middle" font-weight="700" font-family="Outfit" fill="currentColor" stroke="none">Py</text>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>Python</h3>
-                        <p>Automatisation et conception d'outils cyber.</p>
-                    </div>
-                </div>
-
-                <!-- C -->
-                <div class="card bento-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <text x="12" y="16" font-size="10" text-anchor="middle" font-weight="700" font-family="Outfit" fill="currentColor" stroke="none">C</text>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>Langage C</h3>
-                        <p>Mémoire, pointeurs et développement bas niveau.</p>
-                    </div>
-                </div>
-
-                <!-- Assembleur -->
-                <div class="card bento-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>Assembleur</h3>
-                        <p>Rétro-ingénierie et architecture processeur.</p>
-                    </div>
-                </div>
-
-                <!-- Bash -->
-                <div class="card bento-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>Bash / Shell</h3>
-                        <p>Scripting et administration système en CLI.</p>
-                    </div>
-                </div>
-
-                <!-- MQTT & IoT -->
-                <div class="card bento-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m6-6l-4.24 4.24m6 6l-6-6m-6 6l4.24-4.24m-4.24 4.24H1m6 6l-4.24-4.24"></path>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>MQTT & IoT Security</h3>
-                        <p>Protocoles IoT, sécurité des communications asynchrones, attaques sur les appareils connectés.</p>
-                    </div>
-                </div>
-
-                <!-- SQL -->
-                <div class="card bento-item span-2">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>SQL</h3>
-                        <p>Requêtage, gestion des données relationnelles et exploitation sécuritaire (SQLi).</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SOUS-SECTION 2 : OUTILS (Logos PNG originaux) -->
-            <h3 class="subsection-title">Outils & Infrastructure</h3>
-            <div class="bento-grid">
-                
-                <div class="card bento-item span-2">
-                    <img src="images/kali.png" alt="Kali Linux" class="tech-icon">
-                    <div class="bento-text">
-                        <h3>Linux & Environnements Offensifs</h3>
-                        <p>Maîtrise de l'administration système sous Linux et utilisation de Kali pour l'audit et l'analyse de vulnérabilités.</p>
-                    </div>
-                </div>
-                
-                <div class="card bento-item">
-                    <img src="images/docker.png" alt="Docker" class="tech-icon">
-                    <div class="bento-text">
-                        <h3>Docker</h3>
-                        <p>Déploiement de labs et conteneurs.</p>
-                    </div>
-                </div>
-
-                <div class="card bento-item">
-                    <img src="images/gns3.png" alt="GNS3" class="tech-icon">
-                    <div class="bento-text">
-                        <h3>GNS3 & Simulation Réseau</h3>
-                        <p>Conception et simulation de topologies réseau complexes, routage avancé, NAT, pare-feu et architectures multi-sites.</p>
-                    </div>
-                </div>
-
-                <div class="card bento-item">
-                    <img src="images/burp.png" alt="Burp Suite" class="tech-icon">
-                    <div class="bento-text">
-                        <h3>Burp Suite</h3>
-                        <p>Pentesting et interception Web.</p>
-                    </div>
-                </div>
-
-                <div class="card bento-item span-3">
-                    <img src="images/nmap.png" alt="Nmap" class="tech-icon">
-                    <div class="bento-text">
-                        <h3>Nmap & Réseaux</h3>
-                        <p>Cartographie réseau avancée, découverte d'hôtes et scan de ports avec intégration de scripts NSE.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SOUS-SECTION 3 : CERTIFICATIONS -->
-            <h3 class="subsection-title">Certifications</h3>
-            <div class="bento-grid">
-                <div class="card bento-item span-3">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="tech-icon">
-                        <circle cx="12" cy="8" r="7"></circle>
-                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                    </svg>
-                    <div class="bento-text">
-                        <h3>TOEIC : Score 880</h3>
-                        <p>Certification d'anglais professionnel — Niveau opérationnel supérieur (B2+/C1).</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- SECTION CONTACT -->
-        <section class="section" id="contact">
-            <div class="contact-wrapper">
-                <div class="contact-text">
-                    <h2 class="section-title">Prenons contact</h2>
-                    <p>Une question, un projet ou une opportunité d'alternance ? Mon profil vous intéresse ? Je suis disponible pour échanger.</p>
-                    <a href="mailto:axelkifani2@gmail.com" class="direct-mail">axelkifani2@gmail.com</a>
-                </div>
-                
-                <div class="contact-form-container">
-                    <form class="contact-form" onsubmit="event.preventDefault(); alert('Message envoyé !');">
-                        <div class="form-row">
-                            <input type="text" placeholder="Nom" required>
-                            <input type="email" placeholder="Email" required>
-                        </div>
-                        <textarea rows="4" placeholder="Votre message" required></textarea>
-                        <button type="submit" class="btn btn-primary">Envoyer le message</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <p>© 2026 Axel Kifani. | <a href="https://github.com/AxlK78" target="_blank" style="color: var(--text-accent); text-decoration: none;">GitHub</a> • <a href="https://www.linkedin.com/in/axel-kifani/" target="_blank" style="color: var(--text-accent); text-decoration: none;">LinkedIn</a></p>
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1 class="name" data-decode>Axel Kifani</h1>
+        <p class="kicker reveal">Security student · EPITA × École Polytechnique</p>
+        <p class="tagline reveal d1">I build networks, watch them get attacked, and take apart <em>what gets in.</em></p>
+        <p class="lede reveal d2">Every claim on this page links to a case file with the real screenshots, the numbers, and the mistakes I made on the way.</p>
+        <div class="cta reveal d3">
+          <a class="btn primary" href="#cases">Read the case files <span aria-hidden="true">↓</span></a>
+          <a class="btn" href="assets/cv/Axel-Kifani-CV.pdf" download>Download CV <span aria-hidden="true">↓</span></a>
+          <a class="btn" href="https://github.com/AxlK78">GitHub ↗</a>
         </div>
-    </footer>
+        <span class="status reveal d3"><i aria-hidden="true"></i>Open to an apprenticeship · September 2027</span>
+      </div>
 
-    <!-- SCRIPTS -->
-    <script src="particles.js"></script>
-    <script src="carousel.js"></script>
-    
-    <!-- Script de l'animation d'écriture (Typewriter) -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const textToType = "Axel Kifani";
-            const targetElement = document.getElementById("typed-name");
-            let currentIndex = 0;
+      <figure class="globe-wrap" aria-label="ASCII globe replaying attacks captured by my honeypot, from its top source countries.">
+        <canvas class="ascii" data-scene="globe" data-size="lg" data-hero aria-hidden="true"></canvas>
+        <figcaption class="globe-hud">
+          <span>replaying honeypot traffic</span>
+          <span><b id="replay-count">0</b> / 162,823 events</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
 
-            function typeWriter() {
-                if (currentIndex < textToType.length) {
-                    targetElement.textContent += textToType.charAt(currentIndex);
-                    currentIndex++;
-                    // Vitesse de frappe aléatoire pour un effet naturel (entre 80ms et 150ms)
-                    let speed = Math.random() * (150 - 80) + 80;
-                    setTimeout(typeWriter, speed);
-                }
-            }
+  <!-- ===== Figures ===== -->
+  <section aria-label="Key figures">
+    <div class="wrap">
+      <div class="figures reveal">
+        <a href="cases/honeypot.html">
+          <span class="n" data-count="162823">162,823</span>
+          <span class="d">hostile events caught by my honeypot in 70 hours, on a server nobody was told about.</span>
+          <span class="src">CF-02 · Honeypot</span>
+        </a>
+        <a href="cases/reverse-cfg.html">
+          <span class="n">1<small> / 8</small></span>
+          <span class="d">jump targets Ghidra recovered on a computed-goto binary. Measuring where the tools break.</span>
+          <span class="src">CF-04 · Reverse</span>
+        </a>
+        <a href="cases/container-miner.html">
+          <span class="n">507<small> MB</small></span>
+          <span class="d">of useless build tools in an image that also hid a planted miner. Trivy flagged neither.</span>
+          <span class="src">CF-03 · Containers</span>
+        </a>
+        <a href="cases/homelab.html">
+          <span class="n" data-count="6">6</span>
+          <span class="d">network zones behind one OPNsense firewall in my home lab, on a single HP Z240.</span>
+          <span class="src">CF-01 · Home lab</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-            // Démarrer l'animation après un petit délai
-            setTimeout(typeWriter, 500);
-        });
-    </script>
+  <!-- ===== Case files ===== -->
+  <section class="block" id="cases">
+    <div class="wrap">
+      <h2 class="label"><span class="idx">01</span> Case files <span class="count">5 files</span></h2>
+      <ul class="cases">
+        <li class="reveal"><a href="cases/homelab.html" data-spin-host>
+          <canvas class="ascii art" data-scene="rack" data-size="sm" aria-hidden="true"></canvas>
+          <span class="body"><span class="cf">CF-01 · Home lab</span><span class="title">A segmented home lab on one workstation</span><span class="sum">Proxmox, OPNsense and six isolated zones for attack, targets, Active Directory and a SIEM. Built in the open, incidents included.</span></span>
+          <span class="side"><span class="stamp active">Active</span><span class="ctx">Personal · since Nov 2026</span><span class="go">Open file →</span></span>
+        </a></li>
+        <li class="reveal"><a href="cases/honeypot.html" data-spin-host>
+          <canvas class="ascii art" data-scene="globe" data-size="sm" aria-hidden="true"></canvas>
+          <span class="body"><span class="cf">CF-02 · Honeypot</span><span class="title">70 hours on the open internet</span><span class="sum">A T-Pot honeypot on a public VPS: 162,823 events, a SIP toll-fraud sweep from 11 IPs, and a WannaCry dropper pulled apart in Ghidra.</span></span>
+          <span class="side"><span class="stamp closed">Closed</span><span class="ctx">Personal · Sep 2026</span><span class="go">Open file →</span></span>
+        </a></li>
+        <li class="reveal"><a href="cases/container-miner.html" data-spin-host>
+          <canvas class="ascii art" data-scene="container" data-size="sm" aria-hidden="true"></canvas>
+          <span class="body"><span class="cf">CF-03 · Containers</span><span class="title">The health check that was mining</span><span class="sum">Auditing a supplied container stack: a planted SHA-256 miner, a privileged container that could see the host disks, secrets baked into the image.</span></span>
+          <span class="side"><span class="stamp closed">Closed</span><span class="ctx">EPITA · Sep 2026</span><span class="go">Open file →</span></span>
+        </a></li>
+        <li class="reveal"><a href="cases/reverse-cfg.html" data-spin-host>
+          <canvas class="ascii art" data-scene="torus" data-size="sm" aria-hidden="true"></canvas>
+          <span class="body"><span class="cf">CF-04 · Binary analysis</span><span class="title">Where Ghidra loses the thread</span><span class="sum">Nested computed gotos compiled for x86-64, AArch64 and RISC-V, to measure how much of the control-flow graph a disassembler can recover.</span></span>
+          <span class="side"><span class="stamp active">Active</span><span class="ctx">Team of 3 · since Sep 2026</span><span class="go">Open file →</span></span>
+        </a></li>
+        <li class="reveal"><a href="cases/network-gns3.html" data-spin-host>
+          <canvas class="ascii art" data-scene="net" data-size="sm" aria-hidden="true"></canvas>
+          <span class="body"><span class="cf">CF-05 · Networking</span><span class="title">Two companies, two ISPs, one backbone</span><span class="sum">A GNS3 simulation with a realistic public/private addressing plan, static routing, DNAT/SNAT/MASQUERADE and iptables filtering.</span></span>
+          <span class="side"><span class="stamp closed">Closed</span><span class="ctx">EPITA coursework</span><span class="go">Open file →</span></span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Lab map ===== -->
+  <section class="block map" id="lab">
+    <div class="wrap">
+      <h2 class="label"><span class="idx">02</span> The lab, as it stands <span class="count">updated 06 Nov 2026</span></h2>
+
+      <div class="map-grid reveal">
+        <div class="map-canvas">
+          <svg viewBox="0 0 720 600" role="group" aria-label="Network map of the home lab. Select a node to see what runs there.">
+            <path class="wire on" d="M360 78 V112" />
+            <path class="wire on" d="M360 162 V214" />
+            <path class="wire on" d="M360 278 V330" />
+            <path class="wire" d="M68 330 H652" />
+            <path class="wire on" d="M360 330 H68" />
+            <path class="wire on" d="M68 330 V384" />
+            <path class="wire planned" d="M214 330 V384" />
+            <path class="wire planned" d="M360 330 V384" />
+            <path class="wire planned" d="M506 330 V384" />
+            <path class="wire planned" d="M652 330 V384" />
+
+            <text class="zone-label" x="0" y="318">INTERNAL BRIDGES · NO PHYSICAL PORT</text>
+            <g id="nodes"></g>
+
+            <rect class="wb" x="0.75" y="494" width="718.5" height="105" fill="none" stroke-dasharray="3 4"/>
+            <text class="zone-label" x="14" y="514">OFF THE NETWORK · WORKBENCH</text>
+
+            <g class="legend" transform="translate(470 18)">
+              <rect class="on" x="0" y="-8" width="10" height="10"/><text x="16" y="1">running</text>
+              <rect x="90" y="-8" width="10" height="10" fill="none" stroke="#4f5b84" stroke-dasharray="2 2"/><text x="106" y="1">planned</text>
+            </g>
+          </svg>
+        </div>
+        <aside class="map-panel" id="panel" aria-live="polite"></aside>
+      </div>
+      <p class="map-hint">Click a node, or use Tab and Enter. Dashed means the segment exists but its machines are not deployed yet.</p>
+    </div>
+  </section>
+
+  <!-- ===== Logbook ===== -->
+  <section class="block" id="log">
+    <div class="wrap">
+      <h2 class="label"><span class="idx">03</span> Logbook</h2>
+      <ol class="log reveal" reversed>
+        <li><time datetime="2026-11-06">2026-11-06</time><div><span class="tag">Lab</span><b>OPNsense web UI reached through an SSH tunnel</b> via the Proxmox host, no rule opened on the WAN. Before that, a <code>Network is unreachable</code>: the bridge IP was still sitting in <code>interfaces.new</code>.</div></li>
+        <li><time datetime="2026-11-06">2026-11-06</time><div><span class="tag">Lab</span><b>Six interfaces assigned by MAC address</b>, not by name order. WAN on DHCP, SIEM zone up on 10.10.10.1/24.</div></li>
+        <li><time datetime="2026-11-06">2026-11-06</time><div><span class="tag">AD</span><b>Windows Server promoted to domain controller</b> in a new forest, SRV records checked with <code>nslookup</code>. Coursework, and a rehearsal for the lab's AD zone.</div></li>
+        <li><time datetime="2026-11-05">2026-11-05</time><div><span class="tag">Lab</span><b>OPNsense 26.7 installed</b> on Proxmox (UFS, 2 GB fixed RAM). Learned the ISO is a bzip2 file, not a tarball.</div></li>
+        <li><time datetime="2026-10-18">2026-10-18</time><div><span class="tag">Reverse</span><b>Ghidra analysis pushed</b> for x86-64 (-O0/-O2) and AArch64 (-O0). Ghidra turns the unresolved jump into a fake function call.</div></li>
+        <li><time datetime="2026-09-29">2026-09-29</time><div><span class="tag">Containers</span><b>Final container-security lab handed in.</b> The CPU at 60–82% for an idle app was a planted miner.</div></li>
+        <li><time datetime="2026-09-22">2026-09-22</time><div><span class="tag">Honeypot</span><b>92,861 SIP requests in one burst</b> from 11 source IPs, on top of the steady SSH and SMB noise.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Earlier work ===== -->
+  <section class="block">
+    <div class="wrap">
+      <h2 class="label"><span class="idx">04</span> Earlier, smaller tools</h2>
+      <div class="small-work reveal">
+        <a href="https://github.com/AxlK78/mqtt-keylogger-poc">
+          <b>MQTT keylogger PoC</b>
+          <span>Streams keystrokes asynchronously over MQTT. Built to show why IoT messaging needs authentication.</span>
+          <code>python · mqtt</code>
+        </a>
+        <a href="https://github.com/AxlK78/outil--de-chiffrement">
+          <b>Vigenère CLI</b>
+          <span>Encrypts text, files and whole directory trees. First-year project.</span>
+          <code>python · crypto</code>
+        </a>
+        <a href="https://github.com/AxlK78/outil-de-st-ganographie">
+          <b>LSB steganography</b>
+          <span>Hides and extracts messages in the least significant bits of PNG and JPEG images.</span>
+          <code>python · images</code>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="block contact" id="contact">
+    <div class="wrap">
+      <h2 class="label"><span class="idx">05</span> Contact</h2>
+      <div class="contact-grid">
+        <div class="reveal">
+          <h2 class="big">Looking for an apprenticeship from <em>September 2027.</em></h2>
+          <a class="mail" href="mailto:axelkifani2@gmail.com">axelkifani2@gmail.com</a>
+          <dl>
+            <dt>Studies</dt><dd>Bachelor in Cybersecurity, EPITA × École Polytechnique, continuing to an engineering degree</dd>
+            <dt>English</dt><dd>TOEIC 880</dd>
+            <dt>CV</dt><dd><a href="assets/cv/Axel-Kifani-CV.pdf" download>Axel-Kifani-CV.pdf</a> · one page, in French · updated Nov 2026</dd>
+            <dt>Elsewhere</dt><dd><a href="https://github.com/AxlK78">github.com/AxlK78</a> · <a href="https://www.linkedin.com/in/axel-kifani/">linkedin.com/in/axel-kifani</a></dd>
+          </dl>
+        </div>
+        <canvas class="ascii contact-art" data-scene="net" aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 Axel Kifani</span>
+    <span>Hand-written HTML. The 3D is ASCII, rendered live. No tracking.</span>
+  </div>
+</footer>
+
+<script src="assets/js/ascii.js"></script>
+<script src="assets/js/map.js"></script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>

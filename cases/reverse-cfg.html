@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050812">
+  <title>CF-04 · Indirect jumps vs Ghidra — Axel Kifani</title>
+  <meta name="description" content="Nested computed gotos compiled for x86-64, AArch64 and RISC-V, to measure how much of the control-flow graph Ghidra can recover.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="topbar"><div class="wrap glass"><a class="id" href="../index.html">axel kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
+
+<main class="desk wrap">
+  <a class="back" href="../index.html#cases">← all case files</a>
+  <article class="paper">
+    <header class="case-hero">
+      <div class="reveal">
+        <div class="file-head"><span>Case file CF-04<br>Binary analysis</span><span class="stamp-big active">Active</span></div>
+
+        <h1>Where Ghidra loses the thread</h1>
+        <p class="standfirst">A disassembler rebuilds a program's control-flow graph by following jumps. When the target of a jump is a value in a register, it has to guess. We wrote code designed to make it guess wrong, three levels deep, and measured what it recovered.</p>
+      </div>
+      <canvas class="ascii case-art" data-scene="torus" data-size="lg" aria-hidden="true"></canvas>
+    </header>
+    <div class="case-body">
+
+    <dl class="meta">
+      <div><dt>Context</dt><dd>Team of 3, EPITA</dd></div>
+      <div><dt>Since</dt><dd>September 2026</dd></div>
+      <div><dt>Tools</dt><dd>GCC cross, objdump, Ghidra</dd></div>
+      <div><dt>Targets</dt><dd>x86-64, AArch64, RISC-V</dd></div>
+    </dl>
+
+    <div class="bottom-line">
+      <span class="k">So far</span>
+      <p>On x86-64 at -O0, a single <code>JMP RAX</code> has 8 real targets and Ghidra recovers 1. Its decompiler gives up and rewrites the jump as a function call. Optimisation helps it: at -O2 it recovers 6 of the 9 edges of the nested version.</p>
+    </div>
+
+    <h2><span class="no">01</span>The trick: computed goto</h2>
+    <p>GCC lets C++ take the address of a label (<code>&amp;&amp;label</code>) and jump to it (<code>goto *ptr</code>). Put those addresses in a table, index the table at runtime, and the compiler emits <code>jmp *reg</code>: the target is no longer written in the instruction. Chain three of these, each landing on code that does the next indirect jump, and static analysis has to propagate every possible value through every stage to rebuild the graph.</p>
+<pre><code>static void* ops[]    = { &amp;&amp;op_double, &amp;&amp;op_negate, &amp;&amp;op_square };
+static void* signe[]  = { &amp;&amp;positive, &amp;&amp;negative, &amp;&amp;zero };
+static void* parite[] = { &amp;&amp;even, &amp;&amp;odd };
+
+goto *ops[choix];      // level 1 → level 2 → level 3</code></pre>
+    <p>Two programs: <code>indirect_jumps.cpp</code>, readable and deterministic, to follow by hand; and <code>nested_indirect.cpp</code>, where all three table indices come from the bits of one <code>seed</code>, so a loop over seeds walks many distinct paths.</p>
+
+    <h2><span class="no">02</span>My part</h2>
+    <p>Cross-compiling both programs at -O0, -O1 and -O2 for the three architectures, extracting the assembly and <code>objdump</code> listings, then the Ghidra analysis: counting the real indirect jumps and their targets from the tables, and comparing with what Ghidra recovered.</p>
+
+    <h2><span class="no">03</span>Results so far</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Binary</th><th style="text-align:right">Indirect jumps</th><th style="text-align:right">Real targets</th><th style="text-align:right">Found by Ghidra</th><th>Graph</th></tr></thead>
+      <tbody>
+        <tr><td><code>indirect_jumps</code> x86-64 -O0</td><td class="num">1</td><td class="num">8</td><td class="num">1</td><td>truncated, 2 blocks</td></tr>
+        <tr><td><code>indirect_jumps</code> x86-64 -O2</td><td class="num">7</td><td class="num">7</td><td class="num">1</td><td>1 block, rest not disassembled</td></tr>
+        <tr><td><code>nested_indirect</code> x86-64 -O0</td><td class="num">1 shared</td><td class="num">7</td><td class="num">2</td><td>level 1 only, seen as a <code>switch</code></td></tr>
+        <tr><td><code>nested_indirect</code> x86-64 -O2</td><td class="num">4</td><td class="num">9 edges</td><td class="num">6 edges</td><td>reaches level 3, last targets missing</td></tr>
+        <tr><td><code>indirect_jumps</code> AArch64 -O0</td><td class="num">1 (<code>br x0</code>)</td><td class="num">8</td><td class="num">1</td><td>truncated, 2 blocks</td></tr>
+      </tbody>
+    </table></div>
+    <p>The other AArch64 and RISC-V builds are compiled and counted, not analysed yet.</p>
+
+    <h3>Why only 1 of 8 at -O0</h3>
+    <p>At -O0, GCC merges the three <code>goto *</code> into one shared <code>JMP RAX</code> at <code>0x402fc1</code>; each dispatch point loads RAX from its table and jumps there directly. Ghidra propagated the constant <code>choix = 2</code>, computed <code>ops[2]</code>, and stopped. The <code>signe</code> and <code>parite</code> targets are ignored, and the function graph shows two blocks. The tables are typed correctly, but only thanks to the DWARF debug info, and their cross-references are data references with no link to the jump.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/reverse/indirect_x86_O0_decompile.webp" alt="Ghidra decompiler for main of indirect_jumps_O0: warnings 'Could not recover jumptable at 0x00402fc1. Too many branches' and 'Treating indirect jump as call', followed by iVar1 = (*main::ops[2])(); return iVar1;" loading="lazy">
+      <figcaption><b>Fig. 1</b> Ghidra says it: “Could not recover jumptable… Treating indirect jump as call”. Everything after the jump disappears.</figcaption>
+    </figure>
+
+    <h3>Why -O2 helps</h3>
+    <p>At -O2 the compiler stops sharing the jump: each level gets its own <code>JMP qword ptr [RCX + RDX*8]</code> right after a masked index (<code>AND EDX, 0x1</code>). Ghidra recognises that shape as a bounded switch and follows it down to level 3.</p>
+    <figure class="ev reveal">
+      <img src="../assets/img/reverse/nested_x86_O2_dispatch_graph.webp" alt="Ghidra function graph of dispatch in nested_indirect -O2: switchD blocks at 0x403012, 0x403082 and 0x403099 with case blocks, down to LAB_0040303a which loads dispatch::lvl3." loading="lazy" style="max-width:540px;margin:0 auto">
+      <figcaption><b>Fig. 2</b> -O2: separate switch-shaped jumps per level, followed down to <code>lvl3</code>.</figcaption>
+    </figure>
+
+    <h2><span class="no">04</span>Next</h2>
+    <ul class="next-steps">
+      <li>Finish the AArch64 and RISC-V analyses. On RISC-V, a <code>jr</code> can also be a tail call, so each one needs checking by hand.</li>
+      <li>Repeat the measurements in IDA for a comparison.</li>
+      <li>A small tool that propagates table values through the three levels to rebuild the missing edges.</li>
+    </ul>
+
+    </div>
+    <div class="file-foot"><a href="container-miner.html">← CF-03</a><span>CF-04</span><a href="network-gns3.html">CF-05 →</a></div>
+  </article>
+</main>
+<script src="../assets/js/ascii.js"></script>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

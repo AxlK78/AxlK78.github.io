@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050812">
+  <title>CF-01 · Home lab — Axel Kifani</title>
+  <meta name="description" content="A segmented security home lab on one HP Z240: Proxmox, OPNsense, six isolated zones for attack, targets, Active Directory and a SIEM.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="topbar"><div class="wrap glass"><a class="id" href="../index.html">axel kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
+
+<main class="desk wrap">
+  <a class="back" href="../index.html#cases">← all case files</a>
+  <article class="paper">
+    <header class="case-hero">
+      <div class="reveal">
+        <div class="file-head"><span>Case file CF-01<br>Home lab</span><span class="stamp-big active">Active</span></div>
+
+        <h1>A segmented home lab on one workstation</h1>
+        <p class="standfirst">One HP Z240, one hypervisor, one firewall VM, and six networks that can only talk to each other through it. The goal: attack Active Directory and vulnerable web apps from a Kali box, and watch it all happen in a SIEM.</p>
+      </div>
+      <canvas class="ascii case-art" data-scene="rack" data-size="lg" aria-hidden="true"></canvas>
+    </header>
+    <div class="case-body">
+
+    <dl class="meta">
+      <div><dt>Context</dt><dd>Personal project</dd></div>
+      <div><dt>Started</dt><dd>04 Nov 2026</dd></div>
+      <div><dt>Stack</dt><dd>Proxmox VE, OPNsense 26.7</dd></div>
+      <div><dt>Journal</dt><dd><a href="https://github.com/AxlK78/cybersecurity-homelab">GitHub repo</a></dd></div>
+    </dl>
+
+    <div class="bottom-line">
+      <span class="k">Where it stands</span>
+      <p>Hypervisor, six bridges and the firewall are up. The WAN and the SIEM zone are configured, and the admin UI is reachable through an SSH tunnel only. Next: the four other zones, DHCP, firewall rules, then the machines.</p>
+    </div>
+
+    <h2 id="hardware"><span class="no">01</span>The constraint</h2>
+    <p>The whole lab runs on an HP Z240: Intel Core i7 (7th gen, 4 cores / 8 threads) and 32 GB of RAM. The CPU is fine, because lab machines idle most of the time. RAM is the real budget, so Proxmox runs bare-metal (about 1.5 GB of overhead instead of a full desktop OS), and only the machines needed for a scenario are switched on.</p>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Machine</th><th>Zone</th><th>RAM</th></tr></thead>
+      <tbody>
+        <tr><td>OPNsense (fixed, no ballooning)</td><td>all</td><td class="num">2 GB</td></tr>
+        <tr><td>Wazuh all-in-one</td><td>SIEM</td><td class="num">6–8 GB</td></tr>
+        <tr><td>Kali Linux</td><td>Attack</td><td class="num">4 GB</td></tr>
+        <tr><td>Debian + Docker (DVWA, bWAPP, Juice Shop)</td><td>DMZ</td><td class="num">2–3 GB</td></tr>
+        <tr><td>Windows Server 2022, domain controller</td><td>Services</td><td class="num">4 GB</td></tr>
+        <tr><td>Windows 10/11 workstation</td><td>AD clients</td><td class="num">4 GB</td></tr>
+      </tbody>
+    </table></div>
+    <p>Web scenario: firewall, Kali, DMZ and Wazuh, about 15 GB. AD scenario: firewall, Kali, DC, workstation and Wazuh, about 21 GB.</p>
+
+    <h2 id="zones"><span class="no">02</span>Six zones, and why these six</h2>
+    <p>Each zone is its own Linux bridge with no physical port, so a VM plugged into it can only leave through OPNsense. No VLANs: one bridge per zone is easier to read and to debug, and costs nothing.</p>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Bridge</th><th>Zone</th><th>OPNsense</th><th>Network</th></tr></thead>
+      <tbody>
+        <tr><td><code>vmbr0</code></td><td>WAN</td><td>WAN</td><td>home network, DHCP</td></tr>
+        <tr><td><code>vmbr4</code></td><td>SIEM</td><td>LAN</td><td><code>10.10.10.0/24</code></td></tr>
+        <tr><td><code>vmbr1</code></td><td>Services (DC)</td><td>OPT1</td><td><code>10.10.40.0/24</code></td></tr>
+        <tr><td><code>vmbr2</code></td><td>AD clients</td><td>OPT2</td><td><code>10.10.50.0/24</code></td></tr>
+        <tr><td><code>vmbr3</code></td><td>Attack</td><td>OPT3</td><td><code>10.10.20.0/24</code></td></tr>
+        <tr><td><code>vmbr5</code></td><td>DMZ</td><td>OPT4</td><td><code>10.10.30.0/24</code></td></tr>
+      </tbody>
+    </table></div>
+    <h3>Decisions worth defending</h3>
+    <ul>
+      <li><b>The SIEM is the LAN.</b> In OPNsense the LAN is the trusted interface with the anti-lockout rule, so it is where the admin UI lives. Putting it on the DMZ side would mean a compromised web app sits one hop from the firewall's admin page.</li>
+      <li><b>Domain controller and workstations are split.</b> That is how companies do it, and it forces Kerberoasting, DCSync and lateral movement to cross the firewall, where they can be filtered and logged. The cost: an explicit rule set for AD ports (53, 88, 135, 389/636, 445, 464, 3268-3269, dynamic RPC).</li>
+      <li><b>The vulnerable apps are not next to the DC.</b> I first wanted them in “Services”. A popped DVWA should not be a straight line to the domain, so they got their own DMZ bridge.</li>
+    </ul>
+    <figure class="ev reveal">
+      <img src="../assets/img/homelab/23-bridges-6-zones.webp" alt="Proxmox network view listing nic0 and the six bridges vmbr0 to vmbr5, all active and autostarted, with comments Services, AD-Clients, Attaque, SIEM and DMZ." loading="lazy" width="1228" height="241">
+      <figcaption><b>Fig. 1</b> The six bridges. Only vmbr0 has a physical port. My public IPv6 prefix is blacked out.</figcaption>
+    </figure>
+
+    <h2 id="interfaces"><span class="no">03</span>Mapping interfaces by MAC, not by name</h2>
+    <p>Proxmox calls the virtual NICs <code>net0</code>…<code>net5</code>, FreeBSD calls them <code>vtnet0</code>…<code>vtnet5</code>. The numbers usually line up, but nothing guarantees it. The MAC address is the only identifier both sides agree on, so every assignment was checked against it.</p>
+    <div class="ev-pair">
+      <figure class="ev reveal">
+        <img src="../assets/img/homelab/26-vm-hardware-6-nics.webp" alt="Proxmox hardware tab of VM 100 showing six VirtIO network devices net0 to net5, each with its MAC address and bridge, CD drive empty and memory at 2 GiB with balloon 0." loading="lazy">
+        <figcaption><b>Fig. 2</b> VM 100: six VirtIO NICs, Proxmox firewall off, no ISO, ballooning off.</figcaption>
+      </figure>
+      <figure class="ev reveal">
+        <img src="../assets/img/homelab/30-assignation-complete.webp" alt="OPNsense console assignment summary: WAN vtnet0, LAN vtnet4, OPT1 vtnet1, OPT2 vtnet2, OPT3 vtnet3, OPT4 vtnet5." loading="lazy">
+        <figcaption><b>Fig. 3</b> The final assignment, LAN on vtnet4, the SIEM bridge.</figcaption>
+      </figure>
+    </div>
+
+    <section class="incident reveal" aria-label="Incident">
+      <header><span>Incident · interface assignment</span><span>resolved</span></header>
+      <dl>
+        <dt>Symptom</dt><dd>The summary only listed <code>WAN → vtnet0</code>, then only WAN and LAN.</dd>
+        <dt>Cause</dt><dd>The noVNC console was half-drawn, so I pressed Enter to refresh it. For the assignment prompt, an empty answer means “done”.</dd>
+        <dt>Fix</dt><dd>Answered <code>N</code> at the confirmation and redid it. Then fixed the real problem: noVNC set to local scaling, so the console stops redrawing in a corner.</dd>
+      </dl>
+    </section>
+
+    <h2 id="access"><span class="no">04</span>Reaching the firewall without exposing it</h2>
+    <p>The web UI only listens on <code>10.10.10.1</code>, inside a bridge with no physical port: from my laptop, that network does not exist. Instead of opening the admin UI on the WAN, the Proxmox host gets an address in the SIEM zone and acts as a bastion.</p>
+<pre><code># on the Proxmox host: vmbr4 = 10.10.10.2/24, no gateway
+ip -4 addr show vmbr4
+ping -c 3 10.10.10.1
+sysctl net.ipv4.ip_forward     # must be 0
+
+# on my laptop
+ssh -L 8443:10.10.10.1:443 root@pve   # then https://localhost:8443</code></pre>
+    <p><code>ip_forward = 0</code> matters. If the host routed packets itself, it would bridge my home network and the lab and silently bypass the firewall.</p>
+
+    <section class="incident reveal" aria-label="Incident">
+      <header><span>Incident · Network is unreachable</span><span>resolved</span></header>
+      <dl>
+        <dt>Symptom</dt><dd><code>ping 10.10.10.1</code> → <code>connect: Network is unreachable</code>, and <code>ip -4 addr show vmbr4</code> printed nothing.</dd>
+        <dt>Diagnosis</dt><dd>“Unreachable” comes from the local kernel: no route, so the packet never left. Not a firewall issue. <code>/etc/network/interfaces</code> still had <code>vmbr4 inet manual</code>; the new address sat in <code>interfaces.new</code>.</dd>
+        <dt>Cause</dt><dd>In Proxmox, OK only writes <code>interfaces.new</code>. <b>Apply Configuration</b> copies it over and reloads. <code>ifreload -a</code> alone re-applied the old file.</dd>
+        <dt>Fix</dt><dd>Apply Configuration, then the ping answered.</dd>
+      </dl>
+    </section>
+    <figure class="ev reveal">
+      <img src="../assets/img/homelab/33-diagnostic-vmbr4-sans-ip.webp" alt="Terminal on the Proxmox host: the command ip -4 addr show vmbr4 returns no output." loading="lazy">
+      <figcaption><b>Fig. 4</b> The empty output that settled it: the bridge had no IPv4 address yet.</figcaption>
+    </figure>
+
+    <h2 id="wizard"><span class="no">05</span>First-run settings, with the reasons</h2>
+    <div class="table-scroll"><table>
+      <thead><tr><th>Setting</th><th>Value</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Hostname / domain</td><td><code>fw01</code> / <code>lab.internal</code></td><td><code>.internal</code> is reserved for private use; <code>.local</code> collides with mDNS and AD.</td></tr>
+        <tr><td>Timezone</td><td>Europe/Paris, on every machine</td><td>A SIEM rebuilding an attack timeline across hosts needs one clock.</td></tr>
+        <tr><td>Web UI protocol</td><td>HTTPS, self-signed</td><td>In HTTP, the root password crosses the network in clear.</td></tr>
+        <tr><td>Block RFC1918 on WAN</td><td>off</td><td>The WAN sits on my home network, which is private. Stateful filtering still drops unsolicited inbound traffic.</td></tr>
+        <tr><td>Block bogons</td><td>on</td><td>Addresses that should never appear on the internet.</td></tr>
+        <tr><td>Default root password</td><td>changed first</td><td><code>opnsense</code> is in the public docs.</td></tr>
+      </tbody>
+    </table></div>
+    <figure class="ev reveal">
+      <img src="../assets/img/homelab/36-wizard-wan.webp" alt="OPNsense wizard WAN page: type DHCP, Block RFC1918 Private Networks unchecked, Block bogon networks checked." loading="lazy">
+      <figcaption><b>Fig. 5</b> WAN: DHCP from the box, RFC1918 blocking off, bogons on.</figcaption>
+    </figure>
+
+    <h2 id="next"><span class="no">06</span>Next</h2>
+    <ul class="next-steps">
+      <li>Name and address the four OPT zones, DHCP per zone (AD clients get the DC as DNS).</li>
+      <li>Firewall rules: an <code>RFC1918</code> alias so no zone reaches my home network; Attack → targets only; DMZ fully closed by default.</li>
+      <li>Kali and the Docker targets first, to test segmentation early.</li>
+      <li>Wazuh, then the domain controller and a workstation with Sysmon and the Wazuh agent.</li>
+      <li>Populate AD with realistic misconfigurations and attack it from Kali, then find each step in Wazuh.</li>
+    </ul>
+
+    </div>
+    <div class="file-foot"><span>CF-01 · last updated 06 Nov 2026</span><a href="honeypot.html">Next file: CF-02 →</a></div>
+  </article>
+</main>
+<script src="../assets/js/ascii.js"></script>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>
