@@ -19,7 +19,7 @@
   function Grid(canvas, scene, fontPx) {
     this.c = canvas; this.ctx = canvas.getContext("2d"); this.scene = scene;
     this.fontPx = fontPx; this.t = 0; this.speed = 1; this.targetSpeed = 1;
-    this.running = false; this.last = 0; this.age = 0;
+    this.running = false; this.last = 0; this.age = 0; this.out = -1;
     this.resize();
   }
   Grid.prototype.resize = function () {
@@ -45,7 +45,7 @@
   };
   Grid.prototype.frame = function (dt) {
     this.speed += (this.targetSpeed - this.speed) * Math.min(1, dt * 4);
-    this.t += dt * this.speed; this.age += dt;
+    this.t += dt * this.speed; this.age += dt; if (this.out >= 0) this.out += dt;
     this.ch.fill(" "); this.lum.fill(0); this.kind.fill(0);
     this.scene.render(this, this.t, dt);
     this.draw();
@@ -53,14 +53,20 @@
   Grid.prototype.draw = function () {
     var ctx = this.ctx, cols = this.cols, n = this.ch.length;
     ctx.clearRect(0, 0, this.W, this.H);
-    var intro = REDUCED ? 1 : Math.min(1, this.age / 1.3);
+    // intro: cells settle out of noise; out: they break back into noise and vanish
+    var intro = REDUCED ? 1 : Math.min(1, this.age / 1.1);
+    if (this.out >= 0) intro = Math.min(intro, Math.max(-0.3, 1 - this.out / 0.42));
     var buckets = []; for (var b = 0; b < PAL.length; b++) buckets.push([]);
     for (var i = 0; i < n; i++) {
       var ch = this.ch[i]; if (ch === " ") continue;
       var bi = this.kind[i] ? 8 + this.kind[i] : Math.max(0, Math.min(8, Math.floor(this.lum[i] * 9)));
-      if (intro < 1 && hash(i) > intro) {             // materialise effect
-        ch = RAMP[1 + Math.floor(hash(i + Math.floor(this.age * 20)) * (RAMP.length - 1))];
-        bi = Math.max(0, bi - 3);
+      if (intro < 1) {
+        var h = hash(i);
+        if (h > intro + 0.3) continue;
+        if (h > intro) {
+          ch = RAMP[1 + Math.floor(hash(i + Math.floor(this.age * 24)) * (RAMP.length - 1))];
+          bi = Math.max(0, Math.min(bi, 8) - 3);
+        }
       }
       buckets[bi].push(i, ch);
     }
@@ -90,6 +96,16 @@
     container: { extent: 1.1, f: function (x, y, z) {
       var d = sdBox(x, y, z, 0.95, 0.4, 0.4) - 0.02;
       return d + 0.014 * Math.sin(x * 38);              // corrugated walls
+    } },
+    hex: { extent: 1.0, f: function (x, y, z) {     // one hollow honeycomb cell
+      function hx(px, py, pz, r, d) {
+        px = Math.abs(px); py = Math.abs(py); pz = Math.abs(pz);
+        var k = Math.min(-0.8660254 * px + 0.5 * py, 0); px += 2 * k * 0.8660254; py -= 2 * k * 0.5;
+        var cx = Math.max(-0.57735 * r, Math.min(0.57735 * r, px));
+        var dx = Math.sqrt((px - cx) * (px - cx) + (py - r) * (py - r)) * (py - r < 0 ? -1 : 1), dz = pz - d;
+        return Math.min(Math.max(dx, dz), 0) + Math.sqrt(Math.max(dx, 0) * Math.max(dx, 0) + Math.max(dz, 0) * Math.max(dz, 0));
+      }
+      return Math.max(hx(x, z, y, 0.82, 0.26), -hx(x, z, y, 0.58, 0.6)) - 0.015;
     } },
     torus: { extent: 1.0, f: function (x, y, z) {
       var q = Math.sqrt(x * x + z * z) - 0.66;
@@ -278,10 +294,11 @@
 
   // ---------- registry + loop ----------
   var grids = [];
+  var gate = function () { return true; };      // the slide deck narrows this to the visible slides
   function make(canvas) {
     var name = canvas.getAttribute("data-scene"), size = canvas.getAttribute("data-size");
     var font = size === "lg" ? function (w) { return w < 520 ? 7.5 : 9.5; } : size === "sm" ? 7.5 : function (w) { return w < 520 ? 8 : 9.5; };
-    var scene = name === "globe" ? globeScene({ onHit: canvas.__onHit }) : name === "net" ? netScene() : solidScene(name, { spin: size === "sm" ? 0.5 : 0.4, tilt: name === "torus" ? 0.95 : 0.45 });
+    var scene = name === "globe" ? globeScene({ onHit: canvas.__onHit }) : name === "net" ? netScene() : solidScene(name, { spin: size === "sm" ? 0.5 : 0.4, tilt: name === "torus" ? 0.95 : name === "hex" ? 0.7 : 0.45 });
     var g = new Grid(canvas, scene, font);
     g.t = hash(grids.length + 7) * 20;
     grids.push(g); canvas.__grid = g;
@@ -303,13 +320,17 @@
       var dt = Math.min(0.05, (now - prev) / 1000);
       if (now - prev >= 30) {                     // ~33 fps is plenty for ASCII
         prev = now;
-        if (!document.hidden) grids.forEach(function (g) { if (g.running) g.frame(dt); });
+        if (!document.hidden) grids.forEach(function (g) { if (g.running && gate(g.c)) g.frame(dt); });
       }
       requestAnimationFrame(loop);
     })(prev);
   }
 
-  window.ASCII = { init: function () {
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(init); else init();
-  } };
+  function each(root, fn) { root.querySelectorAll("canvas[data-scene]").forEach(function (c) { if (c.__grid) fn(c.__grid); }); }
+  window.ASCII = {
+    init: function () { if (document.fonts && document.fonts.ready) document.fonts.ready.then(init); else init(); },
+    setGate: function (fn) { gate = fn; },
+    enter: function (root) { each(root, function (g) { g.age = 0; g.out = -1; }); },
+    leave: function (root) { each(root, function (g) { if (g.out < 0) g.out = 0; }); }
+  };
 })();

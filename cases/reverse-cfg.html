@@ -3,24 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#050812">
+  <meta name="theme-color" content="#05070d">
   <title>CF-04 · Indirect jumps vs Ghidra — Axel Kifani</title>
   <meta name="description" content="Nested computed gotos compiled for x86-64, AArch64 and RISC-V, to measure how much of the control-flow graph Ghidra can recover.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
 </head>
 <body>
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-<header class="topbar"><div class="wrap glass"><a class="id" href="../index.html">axel kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
+<header class="topbar"><div class="wrap"><a class="id" href="../index.html">Axel Kifani</a><nav aria-label="Main"><a href="../index.html#lab">Lab</a><a href="../index.html#cases" aria-current="page">Case files</a><a href="../index.html#contact">Contact</a><a class="nav-cv" href="../assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a></nav></div></header>
 
 <main class="desk wrap">
-  <a class="back" href="../index.html#cases">← all case files</a>
+  <a class="back" href="../index.html#cf-04">← all case files</a>
   <article class="paper">
     <header class="case-hero">
       <div class="reveal">
-        <div class="file-head"><span>Case file CF-04<br>Binary analysis</span><span class="stamp-big active">Active</span></div>
+        <div class="file-head"><span>Case file CF-04 · Binary analysis</span><span class="stamp-big active">Active</span></div>
 
         <h1>Where Ghidra loses the thread</h1>
         <p class="standfirst">A disassembler rebuilds a program's control-flow graph by following jumps. When the target of a jump is a value in a register, it has to guess. We wrote code designed to make it guess wrong, three levels deep, and measured what it recovered.</p>

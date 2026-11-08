@@ -5,124 +5,138 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Axel Kifani — Security labs & case files</title>
   <meta name="description" content="Cybersecurity student (EPITA × École Polytechnique). Home lab, honeypot telemetry, malware and binary reverse engineering, container forensics. Looking for an apprenticeship from September 2027.">
-  <meta name="theme-color" content="#050812">
+  <meta name="theme-color" content="#05070d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Sora:wght@500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/site.css">
+  <script>if (matchMedia("(min-width: 900px) and (min-height: 600px)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("deck-mode");</script>
 </head>
-<body>
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<body class="home">
 
-<header class="topbar">
-  <div class="wrap glass">
-    <a class="id" href="#top">axel kifani</a>
-    <nav aria-label="Main">
-      <a href="#cases">Case files</a>
-      <a href="#lab">Lab</a>
-      <a href="#log" class="hide-sm">Logbook</a>
-      <a href="#contact">Contact</a>
-      <a class="nav-cv" href="assets/cv/Axel-Kifani-CV.pdf" download>CV ↓</a>
-    </nav>
-  </div>
+<header class="frame-top">
+  <a class="id" href="#top" data-go="top">Axel Kifani</a>
+  <nav aria-label="Main">
+    <a href="#cases" data-go="cases">Work</a>
+    <a href="#lab" data-go="lab">Lab</a>
+    <a href="#log" data-go="log">Logbook</a>
+    <a href="#contact" data-go="contact">Contact</a>
+    <a class="cv" href="assets/cv/Axel-Kifani-CV.pdf" download>CV <span aria-hidden="true">↓</span></a>
+  </nav>
 </header>
 
-<main id="top">
+<div class="frame-bottom" aria-hidden="true">
+  <span class="pos"><b id="pos-n">01</b><i>/</i><span id="pos-t">09</span></span>
+  <span class="where" id="pos-label">Index</span>
+  <span class="hint"><span class="key">↑</span><span class="key">↓</span> scroll or use the keys</span>
+</div>
+<nav class="rail" id="rail" aria-label="Sections"></nav>
 
-  <!-- ===== Hero ===== -->
-  <section class="hero">
-    <div class="wrap">
-      <div>
-        <h1 class="name" data-decode>Axel Kifani</h1>
-        <p class="kicker reveal">Security student · EPITA × École Polytechnique</p>
-        <p class="tagline reveal d1">I build networks, watch them get attacked, and take apart <em>what gets in.</em></p>
-        <p class="lede reveal d2">Every claim on this page links to a case file with the real screenshots, the numbers, and the mistakes I made on the way.</p>
-        <div class="cta reveal d3">
-          <a class="btn primary" href="#cases">Read the case files <span aria-hidden="true">↓</span></a>
-          <a class="btn" href="assets/cv/Axel-Kifani-CV.pdf" download>Download CV <span aria-hidden="true">↓</span></a>
-          <a class="btn" href="https://github.com/AxlK78">GitHub ↗</a>
+<main class="deck" id="deck">
+
+  <!-- 01 · Hero -->
+  <section class="slide hero" id="top" data-label="Index">
+    <div class="slide-inner hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow" data-anim>Security student · EPITA × École Polytechnique</p>
+        <h1 class="name" data-anim="mask"><span data-decode>Axel Kifani</span></h1>
+        <p class="tagline" data-anim>I build networks, watch them get attacked, and take apart what gets in.</p>
+        <p class="lede" data-anim>Every claim here links to a case file with the real screenshots, the numbers, and the mistakes I made on the way.</p>
+        <div class="cta" data-anim>
+          <a class="btn primary" href="#cases" data-go="cases">See the work</a>
+          <a class="btn" href="assets/cv/Axel-Kifani-CV.pdf" download>Download CV</a>
         </div>
-        <span class="status reveal d3"><i aria-hidden="true"></i>Open to an apprenticeship · September 2027</span>
+        <p class="status" data-anim><i aria-hidden="true"></i>Open to an apprenticeship · September 2027</p>
       </div>
-
-      <figure class="globe-wrap" aria-label="ASCII globe replaying attacks captured by my honeypot, from its top source countries.">
+      <figure class="art globe" aria-label="ASCII globe replaying attacks captured by my honeypot, from its top source countries.">
         <canvas class="ascii" data-scene="globe" data-size="lg" data-hero aria-hidden="true"></canvas>
-        <figcaption class="globe-hud">
-          <span>replaying honeypot traffic</span>
+        <figcaption class="hud">
+          <span>Replaying honeypot traffic</span>
           <span><b id="replay-count">0</b> / 162,823 events</span>
         </figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- ===== Figures ===== -->
-  <section aria-label="Key figures">
-    <div class="wrap">
-      <div class="figures reveal">
-        <a href="cases/honeypot.html">
-          <span class="n" data-count="162823">162,823</span>
-          <span class="d">hostile events caught by my honeypot in 70 hours, on a server nobody was told about.</span>
-          <span class="src">CF-02 · Honeypot</span>
-        </a>
-        <a href="cases/reverse-cfg.html">
-          <span class="n">1<small> / 8</small></span>
-          <span class="d">jump targets Ghidra recovered on a computed-goto binary. Measuring where the tools break.</span>
-          <span class="src">CF-04 · Reverse</span>
-        </a>
-        <a href="cases/container-miner.html">
-          <span class="n">507<small> MB</small></span>
-          <span class="d">of useless build tools in an image that also hid a planted miner. Trivy flagged neither.</span>
-          <span class="src">CF-03 · Containers</span>
-        </a>
-        <a href="cases/homelab.html">
-          <span class="n" data-count="6">6</span>
-          <span class="d">network zones behind one OPNsense firewall in my home lab, on a single HP Z240.</span>
-          <span class="src">CF-01 · Home lab</span>
-        </a>
+  <!-- 02–06 · Case files -->
+  <section class="slide case" id="cases" data-label="CF-01 · Home lab">
+    <div class="slide-inner case-grid">
+      <div class="case-copy">
+        <p class="eyebrow" data-anim><span class="cf">Case file 01 / 05</span><span class="state live">Active</span></p>
+        <h2 class="case-title" data-anim="mask"><span>A segmented home lab on one workstation</span></h2>
+        <p class="case-sum" data-anim>Proxmox, OPNsense and six isolated zones for attack, targets, Active Directory and a SIEM. Built in the open, incidents included.</p>
+        <div class="case-fig" data-anim><span class="n" data-count="6">6</span><span class="d">network zones behind one OPNsense firewall, on a single HP Z240.</span></div>
+        <p class="case-meta" data-anim><span>Personal · since Nov 2026</span><span>Proxmox · OPNsense · AD · SIEM</span></p>
+        <a class="more" href="cases/homelab.html" data-anim>Open the case file <span aria-hidden="true">→</span></a>
       </div>
+      <div class="art"><canvas class="ascii" data-scene="rack" data-size="lg" aria-hidden="true"></canvas></div>
     </div>
   </section>
 
-  <!-- ===== Case files ===== -->
-  <section class="block" id="cases">
-    <div class="wrap">
-      <h2 class="label"><span class="idx">01</span> Case files <span class="count">5 files</span></h2>
-      <ul class="cases">
-        <li class="reveal"><a href="cases/homelab.html" data-spin-host>
-          <canvas class="ascii art" data-scene="rack" data-size="sm" aria-hidden="true"></canvas>
-          <span class="body"><span class="cf">CF-01 · Home lab</span><span class="title">A segmented home lab on one workstation</span><span class="sum">Proxmox, OPNsense and six isolated zones for attack, targets, Active Directory and a SIEM. Built in the open, incidents included.</span></span>
-          <span class="side"><span class="stamp active">Active</span><span class="ctx">Personal · since Nov 2026</span><span class="go">Open file →</span></span>
-        </a></li>
-        <li class="reveal"><a href="cases/honeypot.html" data-spin-host>
-          <canvas class="ascii art" data-scene="globe" data-size="sm" aria-hidden="true"></canvas>
-          <span class="body"><span class="cf">CF-02 · Honeypot</span><span class="title">70 hours on the open internet</span><span class="sum">A T-Pot honeypot on a public VPS: 162,823 events, a SIP toll-fraud sweep from 11 IPs, and a WannaCry dropper pulled apart in Ghidra.</span></span>
-          <span class="side"><span class="stamp closed">Closed</span><span class="ctx">Personal · Sep 2026</span><span class="go">Open file →</span></span>
-        </a></li>
-        <li class="reveal"><a href="cases/container-miner.html" data-spin-host>
-          <canvas class="ascii art" data-scene="container" data-size="sm" aria-hidden="true"></canvas>
-          <span class="body"><span class="cf">CF-03 · Containers</span><span class="title">The health check that was mining</span><span class="sum">Auditing a supplied container stack: a planted SHA-256 miner, a privileged container that could see the host disks, secrets baked into the image.</span></span>
-          <span class="side"><span class="stamp closed">Closed</span><span class="ctx">EPITA · Sep 2026</span><span class="go">Open file →</span></span>
-        </a></li>
-        <li class="reveal"><a href="cases/reverse-cfg.html" data-spin-host>
-          <canvas class="ascii art" data-scene="torus" data-size="sm" aria-hidden="true"></canvas>
-          <span class="body"><span class="cf">CF-04 · Binary analysis</span><span class="title">Where Ghidra loses the thread</span><span class="sum">Nested computed gotos compiled for x86-64, AArch64 and RISC-V, to measure how much of the control-flow graph a disassembler can recover.</span></span>
-          <span class="side"><span class="stamp active">Active</span><span class="ctx">Team of 3 · since Sep 2026</span><span class="go">Open file →</span></span>
-        </a></li>
-        <li class="reveal"><a href="cases/network-gns3.html" data-spin-host>
-          <canvas class="ascii art" data-scene="net" data-size="sm" aria-hidden="true"></canvas>
-          <span class="body"><span class="cf">CF-05 · Networking</span><span class="title">Two companies, two ISPs, one backbone</span><span class="sum">A GNS3 simulation with a realistic public/private addressing plan, static routing, DNAT/SNAT/MASQUERADE and iptables filtering.</span></span>
-          <span class="side"><span class="stamp closed">Closed</span><span class="ctx">EPITA coursework</span><span class="go">Open file →</span></span>
-        </a></li>
-      </ul>
+  <section class="slide case" id="cf-02" data-label="CF-02 · Honeypot">
+    <div class="slide-inner case-grid">
+      <div class="case-copy">
+        <p class="eyebrow" data-anim><span class="cf">Case file 02 / 05</span><span class="state">Closed</span></p>
+        <h2 class="case-title" data-anim="mask"><span>70 hours on the open internet</span></h2>
+        <p class="case-sum" data-anim>A T-Pot honeypot on a public VPS: a SIP toll-fraud sweep from 11 IPs, and a WannaCry dropper pulled apart in Ghidra.</p>
+        <div class="case-fig" data-anim><span class="n" data-count="162823">162,823</span><span class="d">hostile events, on a server nobody was told about.</span></div>
+        <p class="case-meta" data-anim><span>Personal · Sep 2026</span><span>T-Pot · Kibana · Ghidra</span></p>
+        <a class="more" href="cases/honeypot.html" data-anim>Open the case file <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="art"><canvas class="ascii" data-scene="hex" data-size="lg" aria-hidden="true"></canvas></div>
     </div>
   </section>
 
-  <!-- ===== Lab map ===== -->
-  <section class="block map" id="lab">
-    <div class="wrap">
-      <h2 class="label"><span class="idx">02</span> The lab, as it stands <span class="count">updated 06 Nov 2026</span></h2>
+  <section class="slide case" id="cf-03" data-label="CF-03 · Containers">
+    <div class="slide-inner case-grid">
+      <div class="case-copy">
+        <p class="eyebrow" data-anim><span class="cf">Case file 03 / 05</span><span class="state">Closed</span></p>
+        <h2 class="case-title" data-anim="mask"><span>The health check that was mining</span></h2>
+        <p class="case-sum" data-anim>Auditing a supplied container stack: a planted SHA-256 miner, a privileged container that could see the host disks, secrets baked into the image.</p>
+        <div class="case-fig" data-anim><span class="n">507<small> MB</small></span><span class="d">of useless build tools in the image. Trivy flagged neither them nor the miner.</span></div>
+        <p class="case-meta" data-anim><span>EPITA · Sep 2026</span><span>Docker · Trivy · forensics</span></p>
+        <a class="more" href="cases/container-miner.html" data-anim>Open the case file <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="art"><canvas class="ascii" data-scene="container" data-size="lg" aria-hidden="true"></canvas></div>
+    </div>
+  </section>
 
-      <div class="map-grid reveal">
+  <section class="slide case" id="cf-04" data-label="CF-04 · Binary analysis">
+    <div class="slide-inner case-grid">
+      <div class="case-copy">
+        <p class="eyebrow" data-anim><span class="cf">Case file 04 / 05</span><span class="state live">Active</span></p>
+        <h2 class="case-title" data-anim="mask"><span>Where Ghidra loses the thread</span></h2>
+        <p class="case-sum" data-anim>Nested computed gotos compiled for x86-64, AArch64 and RISC-V, to measure how much of the control-flow graph a disassembler can recover.</p>
+        <div class="case-fig" data-anim><span class="n">1<small> / 8</small></span><span class="d">jump targets recovered by Ghidra on a computed-goto binary.</span></div>
+        <p class="case-meta" data-anim><span>Team of 3 · since Sep 2026</span><span>Ghidra · x86-64 · AArch64 · RISC-V</span></p>
+        <a class="more" href="cases/reverse-cfg.html" data-anim>Open the case file <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="art"><canvas class="ascii" data-scene="torus" data-size="lg" aria-hidden="true"></canvas></div>
+    </div>
+  </section>
+
+  <section class="slide case" id="cf-05" data-label="CF-05 · Networking">
+    <div class="slide-inner case-grid">
+      <div class="case-copy">
+        <p class="eyebrow" data-anim><span class="cf">Case file 05 / 05</span><span class="state">Closed</span></p>
+        <h2 class="case-title" data-anim="mask"><span>Two companies, two ISPs, one backbone</span></h2>
+        <p class="case-sum" data-anim>A GNS3 simulation with a realistic public/private addressing plan, static routing, DNAT/SNAT/MASQUERADE and iptables filtering.</p>
+        <div class="case-fig" data-anim><span class="n">2<small> × 2</small></span><span class="d">companies and ISPs joined over one simulated backbone.</span></div>
+        <p class="case-meta" data-anim><span>EPITA coursework</span><span>GNS3 · iptables · NAT</span></p>
+        <a class="more" href="cases/network-gns3.html" data-anim>Open the case file <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="art"><canvas class="ascii" data-scene="net" data-size="lg" aria-hidden="true"></canvas></div>
+    </div>
+  </section>
+
+  <!-- 07 · Lab map -->
+  <section class="slide map" id="lab" data-label="The lab">
+    <div class="slide-inner">
+      <div class="slide-head">
+        <h2 class="section-title" data-anim="mask"><span>The lab, as it stands</span></h2>
+        <p class="eyebrow" data-anim>Updated 06 Nov 2026 · select a node</p>
+      </div>
+      <div class="map-grid" data-anim>
         <div class="map-canvas">
           <svg viewBox="0 0 720 600" role="group" aria-label="Network map of the home lab. Select a node to see what runs there.">
             <path class="wire on" d="M360 78 V112" />
@@ -142,86 +156,69 @@
             <rect class="wb" x="0.75" y="494" width="718.5" height="105" fill="none" stroke-dasharray="3 4"/>
             <text class="zone-label" x="14" y="514">OFF THE NETWORK · WORKBENCH</text>
 
-            <g class="legend" transform="translate(470 18)">
-              <rect class="on" x="0" y="-8" width="10" height="10"/><text x="16" y="1">running</text>
-              <rect x="90" y="-8" width="10" height="10" fill="none" stroke="#4f5b84" stroke-dasharray="2 2"/><text x="106" y="1">planned</text>
+            <g class="legend" transform="translate(500 18)">
+              <rect class="on" x="0" y="-8" width="8" height="8"/><text x="14" y="0">running</text>
+              <rect class="off" x="80" y="-8" width="8" height="8"/><text x="94" y="0">planned</text>
             </g>
           </svg>
         </div>
         <aside class="map-panel" id="panel" aria-live="polite"></aside>
       </div>
-      <p class="map-hint">Click a node, or use Tab and Enter. Dashed means the segment exists but its machines are not deployed yet.</p>
     </div>
   </section>
 
-  <!-- ===== Logbook ===== -->
-  <section class="block" id="log">
-    <div class="wrap">
-      <h2 class="label"><span class="idx">03</span> Logbook</h2>
-      <ol class="log reveal" reversed>
-        <li><time datetime="2026-11-06">2026-11-06</time><div><span class="tag">Lab</span><b>OPNsense web UI reached through an SSH tunnel</b> via the Proxmox host, no rule opened on the WAN. Before that, a <code>Network is unreachable</code>: the bridge IP was still sitting in <code>interfaces.new</code>.</div></li>
-        <li><time datetime="2026-11-06">2026-11-06</time><div><span class="tag">Lab</span><b>Six interfaces assigned by MAC address</b>, not by name order. WAN on DHCP, SIEM zone up on 10.10.10.1/24.</div></li>
-        <li><time datetime="2026-11-06">2026-11-06</time><div><span class="tag">AD</span><b>Windows Server promoted to domain controller</b> in a new forest, SRV records checked with <code>nslookup</code>. Coursework, and a rehearsal for the lab's AD zone.</div></li>
-        <li><time datetime="2026-11-05">2026-11-05</time><div><span class="tag">Lab</span><b>OPNsense 26.7 installed</b> on Proxmox (UFS, 2 GB fixed RAM). Learned the ISO is a bzip2 file, not a tarball.</div></li>
-        <li><time datetime="2026-10-18">2026-10-18</time><div><span class="tag">Reverse</span><b>Ghidra analysis pushed</b> for x86-64 (-O0/-O2) and AArch64 (-O0). Ghidra turns the unresolved jump into a fake function call.</div></li>
-        <li><time datetime="2026-09-29">2026-09-29</time><div><span class="tag">Containers</span><b>Final container-security lab handed in.</b> The CPU at 60–82% for an idle app was a planted miner.</div></li>
-        <li><time datetime="2026-09-22">2026-09-22</time><div><span class="tag">Honeypot</span><b>92,861 SIP requests in one burst</b> from 11 source IPs, on top of the steady SSH and SMB noise.</div></li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- ===== Earlier work ===== -->
-  <section class="block">
-    <div class="wrap">
-      <h2 class="label"><span class="idx">04</span> Earlier, smaller tools</h2>
-      <div class="small-work reveal">
-        <a href="https://github.com/AxlK78/mqtt-keylogger-poc">
-          <b>MQTT keylogger PoC</b>
-          <span>Streams keystrokes asynchronously over MQTT. Built to show why IoT messaging needs authentication.</span>
-          <code>python · mqtt</code>
-        </a>
-        <a href="https://github.com/AxlK78/outil--de-chiffrement">
-          <b>Vigenère CLI</b>
-          <span>Encrypts text, files and whole directory trees. First-year project.</span>
-          <code>python · crypto</code>
-        </a>
-        <a href="https://github.com/AxlK78/outil-de-st-ganographie">
-          <b>LSB steganography</b>
-          <span>Hides and extracts messages in the least significant bits of PNG and JPEG images.</span>
-          <code>python · images</code>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Contact ===== -->
-  <section class="block contact" id="contact">
-    <div class="wrap">
-      <h2 class="label"><span class="idx">05</span> Contact</h2>
-      <div class="contact-grid">
-        <div class="reveal">
-          <h2 class="big">Looking for an apprenticeship from <em>September 2027.</em></h2>
-          <a class="mail" href="mailto:axelkifani2@gmail.com">axelkifani2@gmail.com</a>
-          <dl>
-            <dt>Studies</dt><dd>Bachelor in Cybersecurity, EPITA × École Polytechnique, continuing to an engineering degree</dd>
-            <dt>English</dt><dd>TOEIC 880</dd>
-            <dt>CV</dt><dd><a href="assets/cv/Axel-Kifani-CV.pdf" download>Axel-Kifani-CV.pdf</a> · one page, in French · updated Nov 2026</dd>
-            <dt>Elsewhere</dt><dd><a href="https://github.com/AxlK78">github.com/AxlK78</a> · <a href="https://www.linkedin.com/in/axel-kifani/">linkedin.com/in/axel-kifani</a></dd>
-          </dl>
+  <!-- 08 · Logbook -->
+  <section class="slide" id="log" data-label="Logbook">
+    <div class="slide-inner log-grid">
+      <div>
+        <div class="slide-head">
+          <h2 class="section-title" data-anim="mask"><span>Logbook</span></h2>
+          <p class="eyebrow" data-anim>Most recent first</p>
         </div>
-        <canvas class="ascii contact-art" data-scene="net" aria-hidden="true"></canvas>
+        <ol class="log" reversed data-anim>
+          <li><time datetime="2026-11-06">2026-11-06</time><span class="tag">Lab</span><p><b>OPNsense web UI reached through an SSH tunnel</b> via the Proxmox host, no rule opened on the WAN. The bridge IP was still sitting in <code>interfaces.new</code>.</p></li>
+          <li><time datetime="2026-11-06">2026-11-06</time><span class="tag">Lab</span><p><b>Six interfaces assigned by MAC address</b>, not by name order. WAN on DHCP, SIEM zone up on 10.10.10.1/24.</p></li>
+          <li><time datetime="2026-11-06">2026-11-06</time><span class="tag">AD</span><p><b>Windows Server promoted to domain controller</b> in a new forest, SRV records checked with <code>nslookup</code>.</p></li>
+          <li><time datetime="2026-11-05">2026-11-05</time><span class="tag">Lab</span><p><b>OPNsense 26.7 installed</b> on Proxmox. Learned the ISO is a bzip2 file, not a tarball.</p></li>
+          <li><time datetime="2026-10-18">2026-10-18</time><span class="tag">Reverse</span><p><b>Ghidra analysis pushed</b> for x86-64 and AArch64. Ghidra turns the unresolved jump into a fake function call.</p></li>
+          <li><time datetime="2026-09-29">2026-09-29</time><span class="tag">Containers</span><p><b>Container-security lab handed in.</b> The CPU at 60–82% for an idle app was a planted miner.</p></li>
+          <li><time datetime="2026-09-22">2026-09-22</time><span class="tag">Honeypot</span><p><b>92,861 SIP requests in one burst</b> from 11 source IPs.</p></li>
+        </ol>
       </div>
+      <aside class="earlier">
+        <p class="eyebrow" data-anim>Earlier, smaller tools</p>
+        <ul data-anim>
+          <li><a href="https://github.com/AxlK78/mqtt-keylogger-poc"><b>MQTT keylogger PoC</b><span>Streams keystrokes over MQTT, to show why IoT messaging needs authentication.</span><code>python · mqtt</code></a></li>
+          <li><a href="https://github.com/AxlK78/outil--de-chiffrement"><b>Vigenère CLI</b><span>Encrypts text, files and whole directory trees.</span><code>python · crypto</code></a></li>
+          <li><a href="https://github.com/AxlK78/outil-de-st-ganographie"><b>LSB steganography</b><span>Hides and extracts messages in the low bits of PNG and JPEG images.</span><code>python · images</code></a></li>
+        </ul>
+      </aside>
     </div>
+  </section>
+
+  <!-- 09 · Contact -->
+  <section class="slide contact" id="contact" data-label="Contact">
+    <div class="slide-inner contact-grid">
+      <div>
+        <p class="eyebrow" data-anim>Contact</p>
+        <h2 class="big" data-anim="mask"><span>Looking for an apprenticeship from September 2027.</span></h2>
+        <a class="mail" href="mailto:axelkifani2@gmail.com" data-anim>axelkifani2@gmail.com <span aria-hidden="true">→</span></a>
+        <dl data-anim>
+          <dt>Studies</dt><dd>Bachelor in Cybersecurity, EPITA × École Polytechnique, continuing to an engineering degree</dd>
+          <dt>English</dt><dd>TOEIC 880</dd>
+          <dt>CV</dt><dd><a href="assets/cv/Axel-Kifani-CV.pdf" download>Axel-Kifani-CV.pdf</a> · one page, in French</dd>
+          <dt>Elsewhere</dt><dd><a href="https://github.com/AxlK78">GitHub</a> · <a href="https://www.linkedin.com/in/axel-kifani/">LinkedIn</a></dd>
+        </dl>
+      </div>
+      <div class="art"><canvas class="ascii" data-scene="net" aria-hidden="true"></canvas></div>
+    </div>
+    <footer class="site-foot" data-anim>
+      <span>© 2026 Axel Kifani</span>
+      <span>Hand-written HTML. The 3D is ASCII, rendered live. No tracking.</span>
+    </footer>
   </section>
 
 </main>
-
-<footer class="site">
-  <div class="wrap">
-    <span>© 2026 Axel Kifani</span>
-    <span>Hand-written HTML. The 3D is ASCII, rendered live. No tracking.</span>
-  </div>
-</footer>
 
 <script src="assets/js/ascii.js"></script>
 <script src="assets/js/map.js"></script>
